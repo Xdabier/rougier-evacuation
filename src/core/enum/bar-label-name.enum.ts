@@ -1,7 +1,7 @@
 enum BarLabelNameEnum {
     homeStack = 'common.home',
     logsStack = 'common.log',
-    parcPrepStack = 'common.parcPrep',
+    evacuationStack = 'common.evacuation',
     settingsStack = 'common.settings'
 }
 

@@ -1,24 +1,28 @@
 {
   "common": {
     "home": "Home",
-    "parcPrep": "Parc prep",
+    "evacuation": "Evacuation",
     "log": "Logs",
     "settings": "Settings",
     "id": "ID",
+    "syncing": "Synchronization...",
     "logId": "Log ID",
-    "parcId": "Parc ID",
-    "prepFileId": "Prep form ID {{fileId}}",
+    "syncError": "Synchronization error, perhaps check the configuration of your server.",
+    "evacId": "Evac ID",
+    "succSync": "Successfully synchronized!",
+    "succAllSync": "All records have been successfully synchronized!",
+    "evacFileId": "Evacuation form ID {{fileId}}",
     "creationDate": "Created {{date}}",
     "lastLogDate": "Last log {{date}}",
     "logs": "Logs",
     "logsNumber": "{{numLogs}} logs",
-    "addParcPrepFile": "Add parc prep form",
-    "editParcPrepFile": "Edit form",
+    "addEvacuationFile": "Add evacuation form",
+    "editEvacuationFile": "Edit form",
     "editLog": "Edit log",
-    "serverInfo": "Server information",
     "addLog": "Add log",
     "sync": "Synchronize",
     "scanBarCode": "Scan bare-code",
+    "serverInfo": "Server information",
     "syncAll": "Synchronize all",
     "synced": "Synchronized",
     "dupErr": "Duplicate identifier!",
@@ -32,8 +36,20 @@
     "validErr": "Please make sure all the fields are valid.",
     "requiredField": "This field is required"
   },
+  "syncErrors": {
+    "noLogs": "No logs to synchronize",
+    "allSynced": "Everything is already synchronized"
+  },
+  "noServerData": {
+    "confirm": "Configure",
+    "no": "No",
+    "message": "The server information is not yet configured, do you want to configure it now? ",
+    "title": "No server settings!"
+  },
   "actionSheet": {
-    "ph": "Filter the list by name, ex: Jean-pierre "
+    "searchBar": {
+      "ph": "Filter the list by name, ex: Jean-pierre "
+    }
   },
   "changeLanguageAlert": {
     "title": "Language change",
@@ -45,15 +61,15 @@
     "message_code": "Do you want to close without scanning the code ? "
   },
   "homePage": {
-    "title": "Current parc preparation form"
+    "title": "Current evacuation form"
   },
   "logsListPage": {
-    "title": "Parc logs",
-    "filterInputPh": "Start typing parc id...",
+    "title": "Evac logs",
+    "filterInputPh": "Start typing evac id...",
     "noContent": "No added logs yet."
   },
-  "parcPrep": {
-    "noContent": "You need to add parc preparation forms first."
+  "evacuation": {
+    "noContent": "You need to add evacuation forms first."
   },
   "settings": {
     "setServer": "Set server information",
@@ -64,8 +80,9 @@
   "modals": {
     "aux": {
       "title": "Add {{val}}",
-      "confirm": "Confirm {{val}} addition",
       "succMsg": "{{val}} added successfully!",
+      "succMsgEdit": "{{val}} edited successfully!",
+      "confirm": "Confirm {{val}} addition",
       "fields": {
         "name": {
           "label": "Name",
@@ -89,6 +106,7 @@
     "logs": {
       "confirm": "Confirm log addition",
       "succMsg": "Log added successfully!",
+      "succMsgEdit": "Log edited successfully!",
       "fields": {
         "barCode": {
           "label": "Bar code",
@@ -144,9 +162,10 @@
         }
       }
     },
-    "parcPrep": {
-      "confirm": "Confirm prep. form addition",
-      "succMsg": "Parc preparation form added successfully!",
+    "evacuation": {
+      "confirm": "Confirm evacuation form addition",
+      "succMsg": "Evacuation form added successfully!",
+      "succMsgEdit": "Evacuation form edited successfully!",
       "fields": {
         "id": {
           "label": "Form ID",
@@ -170,8 +189,8 @@
           "label": "Date",
           "ph": "Please select date"
         },
-        "parcAsDefault": {
-          "label": "Set this parc as default"
+        "evacAsDefault": {
+          "label": "Set this evac as default"
         }
       }
     },

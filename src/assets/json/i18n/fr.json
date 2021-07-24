@@ -1,34 +1,34 @@
 {
     "common": {
         "home": "Acceuil",
-        "parcPrep": "Prép. parc",
+        "evacuation": "Évacuation",
         "log": "Bille",
         "settings": "Paramètres",
         "id": "ID",
         "syncing": "Synchronisation...",
         "logId": "ID bille",
         "syncError": "Erreur de synchronisation, vérifiez peut-être la configuration de votre serveur.",
-        "parcId": "ID Parc",
+        "evacId": "ID Evac",
         "succSync": "Fiche synchronisé avec succès!",
         "succAllSync": "Tous les fiches ont été synchronisés avec succès!",
-        "prepFileId": "ID fiche prép. parc {{fileId}}",
+        "evacFileId": "ID fiche évacuation {{fileId}}",
         "creationDate": "Créé le {{date}}",
         "lastLogDate": "Dernière bille le {{date}}",
         "logs": "Billes",
         "logsNumber": "{{numLogs}} Billes",
-        "addParcPrepFile": "Ajouter fiche prép. parc",
-        "editParcPrepFile": "Modifier fiche",
+        "addEvacuationFile": "Ajouter fiche évacuation",
+        "editEvacuationFile": "Modifier fiche",
         "editLog": "Modifier bille",
         "addLog": "Ajouter bille",
         "sync": "Synchroniser",
         "scanBarCode": "Scan code a barre",
+        "serverInfo": "Configurations du serveur",
         "syncAll": "Synchroniser tout",
         "synced": "Synchronisé",
         "dupErr": "Identifiant dupliqué !",
         "fr": "Français",
         "en": "Anglais",
         "yes": "Oui",
-        "serverInfo": "Configurations du serveur",
         "validate": "Valider",
         "no": "Non",
         "code": "Code: {{val}}",
@@ -61,15 +61,15 @@
         "message_code": "Vous voulez fermer sans scanner le code ?"
     },
     "homePage": {
-        "title": "Fiche préparation parc actuel"
+        "title": "Fiche évacuation actuel"
     },
     "logsListPage": {
-        "title": "Bille de parc",
+        "title": "Bille de evac",
         "filterInputPh": "Commencez à taper l'id...",
         "noContent": "Aucun bille n'a encore été ajouté."
     },
-    "parcPrep": {
-        "noContent": "Vous devez d'abord ajouter les fiches de préparation du parc."
+    "evacuation": {
+        "noContent": "Vous devez d'abord ajouter les fiches d'évacuation."
     },
     "settings": {
         "setServer": "Configurer le serveur",
@@ -162,10 +162,10 @@
                 }
             }
         },
-        "parcPrep": {
+        "evacuation": {
             "confirm": "Confirmer l'ajout de fiche",
-            "succMsg": "Fiche préparation parc ajouter avec succée!",
-            "succMsgEdit": "Fiche préparation parc modifié avec succée!",
+            "succMsg": "Fiche évacuation ajouter avec succée!",
+            "succMsgEdit": "Fiche évacuation modifié avec succée!",
             "fields": {
                 "id": {
                     "label": "ID de fiche",
@@ -189,7 +189,7 @@
                     "label": "Date",
                     "ph": "Veuillez choisir une date"
                 },
-                "parcAsDefault": {
+                "evacAsDefault": {
                     "label": "Choisir comme fiche actuelle"
                 }
             }

@@ -1,27 +1,27 @@
 import {ResultSet, SQLError} from 'react-native-sqlite-storage';
 import SqlLiteService from './sql-lite.service';
 import {LogDetailsInterface, LogInterface} from '../interfaces/log.interface';
-import {ParcPrepStatsInterface} from '../interfaces/parc-prep-stats.interface';
+import {EvacuationStatsInterface} from '../interfaces/evacuation-stats.interface';
 import {
-    getParcPrepStatsById,
-    updateParcPrepStats
-} from './parc-prep-stats.service';
-import {updateSyncParcPrepFile} from './parc-prep.service';
+    getEvacuationStatsById,
+    updateEvacuationStats
+} from './evacuation-stats.service';
+import {updateSyncEvacuationFile} from './evacuation.service';
 
 const SQLiteService: SqlLiteService = new SqlLiteService();
 
 export const getLogs = async (
-    parcId: string,
+    evacId: string,
     close = false
 ): Promise<LogDetailsInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT l.parcPrepId, l.creationDate, l.barCode,
+            `SELECT l.evacuationId, l.creationDate, l.barCode,
             l.logging, l.indicator, l.lengthVal, l.id, l.dgb, l.dpb, l.diameter, l.volume,
             l.quality, l.status, l.statusPattern, g.code AS gasCode, g.name
             AS gasName FROM log AS l INNER JOIN gasoline AS g
-            ON g.code = l.gasoline WHERE l.parcPrepId = ?;`,
-            [parcId]
+            ON g.code = l.gasoline WHERE l.evacuationId = ?;`,
+            [evacId]
         );
         if (close && !SQLiteService.finished) {
             SQLiteService.db.close().catch((reason: SQLError) => {
@@ -35,7 +35,7 @@ export const getLogs = async (
 };
 
 export const getRawLogs = async (
-    parcId: string,
+    evacId: string,
     close = false
 ): Promise<LogInterface[]> => {
     try {
@@ -43,8 +43,8 @@ export const getRawLogs = async (
             `SELECT l.barCode, l.logging, l.indicator,
             l.lengthVal, l.id, l.dgb, l.dpb, l.diameter, l.volume,
             l.quality, l.status, l.statusPattern, l.gasoline FROM log AS l
-            WHERE l.parcPrepId = ?;`,
-            [parcId]
+            WHERE l.evacuationId = ?;`,
+            [evacId]
         );
         if (close && !SQLiteService.finished) {
             SQLiteService.db.close().catch((reason: SQLError) => {
@@ -66,13 +66,13 @@ export const insertLog = async (element: LogInterface) => {
             ).join(', ')})`,
             KEYS.map((x: string) => (element as any)[x])
         );
-        const PARC_PREP_STATS: ParcPrepStatsInterface[] = await getParcPrepStatsById(
-            element.parcPrepId
+        const PARC_PREP_STATS: EvacuationStatsInterface[] = await getEvacuationStatsById(
+            element.evacuationId
         );
 
-        await updateSyncParcPrepFile(`${element.parcPrepId}`, 0);
+        await updateSyncEvacuationFile(`${element.evacuationId}`, 0);
 
-        const STATS: ParcPrepStatsInterface = {
+        const STATS: EvacuationStatsInterface = {
             ...PARC_PREP_STATS[0],
             logsNumber: PARC_PREP_STATS[0].logsNumber
                 ? PARC_PREP_STATS[0].logsNumber + 1
@@ -81,7 +81,7 @@ export const insertLog = async (element: LogInterface) => {
             lastLogId: element.id
         };
 
-        return updateParcPrepStats(STATS);
+        return updateEvacuationStats(STATS);
     } catch (e) {
         return Promise.reject(e);
     }
@@ -96,7 +96,7 @@ export const updateLog = async (oldId: string, element: LogInterface) => {
             )} WHERE id = ?;`,
             [...KEYS.map((x: string) => (element as any)[x]), oldId]
         );
-        await updateSyncParcPrepFile(`${element.parcPrepId}`, 0);
+        await updateSyncEvacuationFile(`${element.evacuationId}`, 0);
 
         return UP_L;
     } catch (e) {

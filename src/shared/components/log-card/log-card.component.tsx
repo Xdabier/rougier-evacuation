@@ -82,8 +82,8 @@ const LogCard: React.FunctionComponent<{
                 </Text>
             </Text>
             <Text style={[info, regularFont, textAlignLeft]}>
-                {translate('common.prepFileId', {
-                    fileId: logItem.parcPrepId
+                {translate('common.evacFileId', {
+                    fileId: logItem.evacuationId
                 })}
             </Text>
             <Text style={[info, regularFont, textAlignLeft]}>

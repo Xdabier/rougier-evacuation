@@ -1,5 +1,5 @@
 enum EventTopicEnum {
-    updateParcPrep = 'parc_prep_update',
+    updateEvacuation = 'evac_update',
     updateAux = 'aux_update',
     updateServer = 'update_server',
     showServerModal = 'show_server_modal',

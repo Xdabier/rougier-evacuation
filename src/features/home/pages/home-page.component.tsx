@@ -21,14 +21,14 @@ import CommonStyles, {
 } from '../../../styles';
 import {translate} from '../../../utils/i18n.utils';
 import PageTitle from '../../../shared/components/page-title/page-title.component';
-import ParcPrepCard from '../../../shared/components/parc-prep-card/parc-prep-card.component';
+import EvacuationCard from '../../../shared/components/evacuation-card/evacuation-card.component';
 import MatButton from '../../../shared/components/mat-button.component';
 import AddLogDetails from '../../../shared/components/add-log-modal/add-log-modal.component';
-import AddParcFileDetails from '../../../shared/components/add-parc-file-modal/add-parc-file-modal.component';
+import AddEvacFileDetails from '../../../shared/components/add-evac-file-modal/add-evac-file-modal.component';
 import EventTopicEnum from '../../../core/enum/event-topic.enum';
 import {MainStateContextInterface} from '../../../core/interfaces/main-state.interface';
 import MainStateContext from '../../../core/contexts/main-state.context';
-import {ParcPrepAllDetailsInterface} from '../../../core/interfaces/parc-prep-all-details.interface';
+import {EvacuationAllDetailsInterface} from '../../../core/interfaces/evacuation-all-details.interface';
 import CameraModal from '../../../shared/components/camera-modal/camera-modal.component';
 import syncForm from '../../../core/services/sync-logs.service';
 import {requestServerEdit} from '../../../utils/modal.utils';
@@ -77,26 +77,26 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
     const [barCode, setBarCode] = useState<string>('');
     const [addLogModalShow, setAddLogModalShow] = useState<boolean>(false);
     const [cameraModalShow, setCameraModalShow] = useState<boolean>(false);
-    const [addParcFileModalShow, setAddParcFileModalShow] = useState<boolean>(
+    const [addEvacFileModalShow, setAddEvacFileModalShow] = useState<boolean>(
         false
     );
-    const [oldParc, setOldParc] = useState<ParcPrepAllDetailsInterface | null>(
+    const [oldEvac, setOldEvac] = useState<EvacuationAllDetailsInterface | null>(
         null
     );
     const {
-        homeParcPrepFile,
+        homeEvacuationFile,
         gasolines,
         cubers,
         sites,
         serverData,
-        parcPrepFiles
+        evacuationFiles
     } = useContext<MainStateContextInterface>(MainStateContext);
 
     const onSyncClicked = async () => {
         try {
-            if (serverData && homeParcPrepFile) {
+            if (serverData && homeEvacuationFile) {
                 eventPub(EventTopicEnum.setSpinner, true);
-                const RES = await syncForm(homeParcPrepFile, serverData);
+                const RES = await syncForm(homeEvacuationFile, serverData);
                 if (RES) {
                     ToastAndroid.show(
                         translate('common.succSync'),
@@ -128,11 +128,11 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
 
     const notSyncedFiles = useMemo(
         () =>
-            parcPrepFiles.filter(
-                (file: ParcPrepAllDetailsInterface) =>
+            evacuationFiles.filter(
+                (file: EvacuationAllDetailsInterface) =>
                     !file.allSynced && file.logsNumber
             ),
-        [parcPrepFiles]
+        [evacuationFiles]
     );
 
     const onSyncAllClicked = async () => {
@@ -146,7 +146,7 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
             try {
                 eventPub(EventTopicEnum.setSpinner, true);
                 const SYNC_ALL = notSyncedFiles.map(
-                    (file: ParcPrepAllDetailsInterface) =>
+                    (file: EvacuationAllDetailsInterface) =>
                         syncForm(file, serverData)
                 );
 
@@ -177,18 +177,18 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                     justifyAlignCenter,
                     scrollView
                 ]}>
-                {homeParcPrepFile ? (
+                {homeEvacuationFile ? (
                     <>
                         <PageTitle title={translate('homePage.title')} />
 
-                        <ParcPrepCard
-                            parcPrepFile={homeParcPrepFile}
-                            editParc={() => {
-                                setOldParc(homeParcPrepFile);
-                                setAddParcFileModalShow(true);
+                        <EvacuationCard
+                            evacuationFile={homeEvacuationFile}
+                            editEvac={() => {
+                                setOldEvac(homeEvacuationFile);
+                                setAddEvacFileModalShow(true);
                             }}
                             onAddLog={() => setAddLogModalShow(true)}
-                            syncParc={onSyncClicked}
+                            syncEvac={onSyncClicked}
                         />
                     </>
                 ) : (
@@ -197,7 +197,7 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                 <View style={[vSpacer60]} />
                 <MatButton
                     onPress={() => setCameraModalShow(true)}
-                    disabled={!homeParcPrepFile}>
+                    disabled={!homeEvacuationFile}>
                     <View
                         style={[
                             fullWidth,
@@ -225,7 +225,7 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                     </View>
                 </MatButton>
                 <View style={[vSpacer12]} />
-                <MatButton onPress={() => setAddParcFileModalShow(true)}>
+                <MatButton onPress={() => setAddEvacFileModalShow(true)}>
                     <View
                         style={[
                             fullWidth,
@@ -243,7 +243,7 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                                 justifyAlignCenter
                             ]}>
                             <Text style={[STYLES.buttonText, textAlignCenter]}>
-                                {translate('common.addParcPrepFile')}
+                                {translate('common.addEvacuationFile')}
                             </Text>
                         </View>
                     </View>
@@ -251,7 +251,7 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                 <View style={[vSpacer12]} />
                 <MatButton
                     onPress={() => setAddLogModalShow(true)}
-                    disabled={!homeParcPrepFile}>
+                    disabled={!homeEvacuationFile}>
                     <View
                         style={[
                             fullWidth,
@@ -324,22 +324,22 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
                     setAddLogModalShow(false);
 
                     if (refresh) {
-                        eventPub(EventTopicEnum.updateParcPrep);
+                        eventPub(EventTopicEnum.updateEvacuation);
                     }
                 }}
             />
 
-            <AddParcFileDetails
-                oldFile={oldParc}
+            <AddEvacFileDetails
+                oldFile={oldEvac}
                 cubers={cubers}
                 sites={sites}
-                modalVisible={addParcFileModalShow}
+                modalVisible={addEvacFileModalShow}
                 onClose={(refresh: boolean | undefined) => {
-                    setAddParcFileModalShow(false);
-                    setOldParc(null);
+                    setAddEvacFileModalShow(false);
+                    setOldEvac(null);
 
                     if (refresh) {
-                        eventPub(EventTopicEnum.updateParcPrep);
+                        eventPub(EventTopicEnum.updateEvacuation);
                     }
                 }}
             />

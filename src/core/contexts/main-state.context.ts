@@ -3,14 +3,14 @@ import {MainStateContextInterface} from '../interfaces/main-state.interface';
 
 const MainStateContext: React.Context<MainStateContextInterface> = React.createContext<MainStateContextInterface>(
     {
-        parcIds: [],
+        evacIds: [],
         gasolines: [],
-        parcPrepFiles: [],
+        evacuationFiles: [],
         logs: [],
         sites: [],
         cubers: [],
-        defaultParc: {
-            parcId: '',
+        defaultEvac: {
+            evacId: '',
             id: -1
         }
     }

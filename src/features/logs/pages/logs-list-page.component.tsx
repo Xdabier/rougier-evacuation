@@ -108,7 +108,7 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
         logs,
         setLogs,
         gasolines,
-        parcIds,
+        evacIds,
         filteringId,
         setFilteringId,
         keyboardHeight
@@ -130,8 +130,8 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
         </>
     );
 
-    const refreshFilter = (parcId: string) => {
-        getLogs(parcId).then((value: LogDetailsInterface[]) => {
+    const refreshFilter = (evacId: string) => {
+        getLogs(evacId).then((value: LogDetailsInterface[]) => {
             if (setLogs) {
                 setLogs(value);
             }
@@ -180,7 +180,7 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
                             alignCenter
                         ]}>
                         <Text style={[STYLES.filterLabel, mainColor]}>
-                            {translate('common.parcId')}
+                            {translate('common.evacId')}
                         </Text>
                         <MatButton
                             isElevated
@@ -229,7 +229,7 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
                 )}
 
                 <AddLogDetails
-                    parcPrepFileId={
+                    evacuationFileId={
                         filteringId && filteringId.length ? filteringId : null
                     }
                     oldLog={oldLog}
@@ -238,7 +238,7 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
                     onClose={(refresh) => {
                         setAddLogModalShow(false);
                         if (refresh) {
-                            eventPub(EventTopicEnum.updateParcPrep);
+                            eventPub(EventTopicEnum.updateEvacuation);
                         }
                     }}
                 />
@@ -253,7 +253,7 @@ const LogsListPage: React.FunctionComponent<LogsListScreenProps> = () => {
                     defaultOverlayOpacity={0.3}>
                     <ActionSheetContent
                         actionSheetRef={actionSheetRef}
-                        valuesList={parcIds}
+                        valuesList={evacIds}
                         keyboardHeight={keyboardHeight}
                         renderElement={renderFilterBtn}
                     />

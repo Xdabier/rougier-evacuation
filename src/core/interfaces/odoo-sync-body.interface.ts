@@ -1,4 +1,4 @@
-interface OdooParcPrepBodyInterface {
+interface OdooEvacuationBodyInterface {
     aac: string;
     cuber: string;
     site: string;
@@ -22,7 +22,7 @@ export interface OdooLogsBodyInterface {
     essence: string;
 }
 
-export interface OdooSyncBodyInterface extends OdooParcPrepBodyInterface {
+export interface OdooSyncBodyInterface extends OdooEvacuationBodyInterface {
     sync: boolean;
     sync_date: string;
     billes: OdooLogsBodyInterface[];

@@ -1,7 +1,7 @@
 enum BarIconNameEnum {
     homeStack = 'home',
     logsStack = 'park',
-    parcPrepStack = 'topic',
+    evacuationStack = 'local-shipping',
     settingsStack = 'settings'
 }
 

@@ -1,10 +1,10 @@
 import {CuberInterface} from './cuber.interface';
 import {SiteInterface} from './site.interface';
-import {DefParcInterface} from './def-parc.interface';
+import {DefEvacInterface} from './def-evac.interface';
 import {GasolineInterface} from './gasoline.interface';
 import {LogDetailsInterface} from './log.interface';
 import {UserInterface} from './user.interface';
-import {ParcPrepAllDetailsInterface} from './parc-prep-all-details.interface';
+import {EvacuationAllDetailsInterface} from './evacuation-all-details.interface';
 import {ServerInterface} from './server.interface';
 
 export interface MainStateContextInterface {
@@ -15,22 +15,22 @@ export interface MainStateContextInterface {
     serverData?: ServerInterface;
     setUser?: (v: UserInterface) => void;
     user?: UserInterface;
-    setDefaultParc?: (v: DefParcInterface) => void;
-    defaultParc: DefParcInterface;
+    setDefaultEvac?: (v: DefEvacInterface) => void;
+    defaultEvac: DefEvacInterface;
     setCubers?: (v: CuberInterface | CuberInterface[]) => void;
     cubers: CuberInterface[];
-    setParcIds?: (v: string | string[]) => void;
-    parcIds: string[];
+    setEvacIds?: (v: string | string[]) => void;
+    evacIds: string[];
     setSites?: (v: SiteInterface | SiteInterface[]) => void;
     sites: SiteInterface[];
     setGasoline?: (v: GasolineInterface | GasolineInterface[]) => void;
     gasolines: GasolineInterface[];
     setLogs?: (v: LogDetailsInterface | LogDetailsInterface[]) => void;
     logs: LogDetailsInterface[];
-    setParcPrepFiles?: (
-        v: ParcPrepAllDetailsInterface | ParcPrepAllDetailsInterface[]
+    setEvacuationFiles?: (
+        v: EvacuationAllDetailsInterface | EvacuationAllDetailsInterface[]
     ) => void;
-    parcPrepFiles: ParcPrepAllDetailsInterface[];
-    setHomeParcPrepFile?: (v: ParcPrepAllDetailsInterface) => void;
-    homeParcPrepFile?: ParcPrepAllDetailsInterface | null;
+    evacuationFiles: EvacuationAllDetailsInterface[];
+    setHomeEvacuationFile?: (v: EvacuationAllDetailsInterface) => void;
+    homeEvacuationFile?: EvacuationAllDetailsInterface | null;
 }

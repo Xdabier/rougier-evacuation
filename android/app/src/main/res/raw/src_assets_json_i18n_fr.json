@@ -61,7 +61,7 @@
         "message_code": "Vous voulez fermer sans scanner le code ?"
     },
     "homePage": {
-        "title": "Fiche préparation parc actuel"
+        "title": "Fiche évacuation actuel"
     },
     "logsListPage": {
         "title": "Bille de parc",
@@ -164,8 +164,8 @@
         },
         "parcPrep": {
             "confirm": "Confirmer l'ajout de fiche",
-            "succMsg": "Fiche préparation parc ajouter avec succée!",
-            "succMsgEdit": "Fiche préparation parc modifié avec succée!",
+            "succMsg": "Fiche évacuation ajouter avec succée!",
+            "succMsgEdit": "Fiche évacuation modifié avec succée!",
             "fields": {
                 "id": {
                     "label": "ID de fiche",

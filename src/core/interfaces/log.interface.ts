@@ -1,5 +1,5 @@
 export interface LogInterface {
-    parcPrepId: string;
+    evacuationId: string;
     creationDate: string;
     barCode: string;
     logging: number;
@@ -19,7 +19,7 @@ export interface LogInterface {
 export interface LogDetailsInterface {
     gasName: string;
     gasCode: string;
-    parcPrepId: string;
+    evacuationId: string;
     creationDate: string;
     barCode: string;
     logging: number;

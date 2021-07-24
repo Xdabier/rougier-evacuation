@@ -1,6 +1,6 @@
 export type MainTabsNavigationProps = {
     homeStack: undefined;
     logsStack: undefined;
-    parcPrepStack: undefined;
+    evacuationStack: undefined;
     settingsStack: undefined;
 };

@@ -71,7 +71,7 @@ const actionSheetRef: RefObject<ActionSheetComponent> = createRef();
 
 const AddLogDetails: React.FunctionComponent<{
     modalVisible: boolean;
-    parcPrepFileId?: string | null;
+    evacuationFileId?: string | null;
     scannedBarCode?: string | null;
     oldLog?: LogDetailsInterface | null;
     gasolineList: GasolineInterface[];
@@ -81,11 +81,11 @@ const AddLogDetails: React.FunctionComponent<{
     onClose,
     oldLog,
     scannedBarCode,
-    parcPrepFileId,
+    evacuationFileId,
     gasolineList
 }: {
     modalVisible: boolean;
-    parcPrepFileId?: string | null;
+    evacuationFileId?: string | null;
     scannedBarCode?: string | null;
     oldLog?: LogDetailsInterface | null;
     onClose: (refresh?: boolean) => void;
@@ -109,7 +109,7 @@ const AddLogDetails: React.FunctionComponent<{
     const [status, setStatus] = useState<string>('');
     const [patternStatus, setPatternStatus] = useState<string>('');
 
-    const {defaultParc, keyboardHeight} = useContext<MainStateContextInterface>(
+    const {defaultEvac, keyboardHeight} = useContext<MainStateContextInterface>(
         MainStateContext
     );
 
@@ -240,16 +240,16 @@ const AddLogDetails: React.FunctionComponent<{
         if (
             validForm() &&
             gasoline &&
-            defaultParc &&
-            Object.keys(defaultParc).length
+            defaultEvac &&
+            Object.keys(defaultEvac).length
         ) {
             const EL: LogInterface = {
                 id,
                 creationDate: new Date().toISOString(),
-                parcPrepId:
-                    parcPrepFileId && parcPrepFileId.length
-                        ? parcPrepFileId
-                        : defaultParc.parcId,
+                evacuationId:
+                    evacuationFileId && evacuationFileId.length
+                        ? evacuationFileId
+                        : defaultEvac.evacId,
                 barCode,
                 dgb: +dgb,
                 diameter: +diameterAvg,
@@ -265,7 +265,7 @@ const AddLogDetails: React.FunctionComponent<{
             };
 
             if (oldLog) {
-                EL.parcPrepId = oldLog.parcPrepId;
+                EL.evacuationId = oldLog.evacuationId;
                 updateLog(oldLog.id, EL)
                     .then((res: ResultSet) => {
                         if (res && res.rows) {
@@ -311,7 +311,7 @@ const AddLogDetails: React.FunctionComponent<{
             }
         } else {
             ToastAndroid.show(
-                'Ne default parc, or one of the fields is wrong.',
+                'Ne default evac, or one of the fields is wrong.',
                 ToastAndroid.LONG
             );
         }
@@ -530,7 +530,7 @@ const AddLogDetails: React.FunctionComponent<{
 };
 
 AddLogDetails.defaultProps = {
-    parcPrepFileId: null,
+    evacuationFileId: null,
     oldLog: null,
     scannedBarCode: null
 };

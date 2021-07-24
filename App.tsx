@@ -7,7 +7,7 @@ import {subscribe as eventSub} from 'pubsub-js';
 import Spinner from 'react-native-loading-spinner-overlay';
 import HomeStackScreens from './src/features/home';
 import LogsStackScreens from './src/features/logs';
-import ParcPrepStackScreens from './src/features/parc-prep';
+import EvacuationStackScreens from './src/features/evacuation';
 import SettingsStackScreens from './src/features/settings';
 import {MainTabsNavigationProps} from './src/core/types/main-tabs-params.type';
 import {setI18nConfig, translate} from './src/utils/i18n.utils';
@@ -27,18 +27,18 @@ import {SiteInterface} from './src/core/interfaces/site.interface';
 import {GasolineInterface} from './src/core/interfaces/gasoline.interface';
 import {LogDetailsInterface} from './src/core/interfaces/log.interface';
 import {UserInterface} from './src/core/interfaces/user.interface';
-import {DefParcInterface} from './src/core/interfaces/def-parc.interface';
+import {DefEvacInterface} from './src/core/interfaces/def-evac.interface';
 import {MainStateContextInterface} from './src/core/interfaces/main-state.interface';
 import MainStateContext from './src/core/contexts/main-state.context';
-import {getDefaultParcId} from './src/core/services/def-parc.service';
+import {getDefaultEvacId} from './src/core/services/def-evac.service';
 import {
-    getParcPrepFileById,
-    getParcPrepFiles,
-    getParcPrepFilesIds
-} from './src/core/services/parc-prep.service';
+    getEvacuationFileById,
+    getEvacuationFiles,
+    getEvacuationFilesIds
+} from './src/core/services/evacuation.service';
 import {getAux} from './src/core/services/aux-data.service';
 import NameToTableEnum from './src/core/enum/name-to-table.enum';
-import {ParcPrepAllDetailsInterface} from './src/core/interfaces/parc-prep-all-details.interface';
+import {EvacuationAllDetailsInterface} from './src/core/interfaces/evacuation-all-details.interface';
 import {getLogs} from './src/core/services/logs.service';
 import EventTopicEnum from './src/core/enum/event-topic.enum';
 import {ServerInterface} from './src/core/interfaces/server.interface';
@@ -65,19 +65,19 @@ const App = () => {
     const [sites, setSites] = useState<SiteInterface[]>([]);
     const [gasolines, setGasolines] = useState<GasolineInterface[]>([]);
     const [logs, setLogs] = useState<LogDetailsInterface[]>([]);
-    const [parcIds, setParcIds] = useState<string[]>([]);
+    const [evacIds, setEvacIds] = useState<string[]>([]);
     const [serverData, setServerData] = useState<ServerInterface>();
     const [filteringId, setFilteringId] = useState<string>();
-    const [parcPrepFiles, setParcPreps] = useState<
-        ParcPrepAllDetailsInterface[]
+    const [evacuationFiles, setEvacuations] = useState<
+        EvacuationAllDetailsInterface[]
     >([]);
     const [
-        homeParcPrepFile,
-        setHomeParcPrep
-    ] = useState<ParcPrepAllDetailsInterface | null>(null);
+        homeEvacuationFile,
+        setHomeEvacuation
+    ] = useState<EvacuationAllDetailsInterface | null>(null);
     const [user, setUser] = useState<UserInterface>();
-    const [defaultParc, setDefParc] = useState<DefParcInterface>({
-        parcId: '',
+    const [defaultEvac, setDefEvac] = useState<DefEvacInterface>({
+        evacId: '',
         id: -1
     });
     const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -95,21 +95,21 @@ const App = () => {
     const MAIN_CONTEXT: MainStateContextInterface = {
         keyboardHeight,
         cubers,
-        defaultParc,
+        defaultEvac,
         gasolines,
         logs,
-        parcPrepFiles,
+        evacuationFiles,
         sites,
         user,
-        parcIds,
-        homeParcPrepFile,
+        evacIds,
+        homeEvacuationFile,
         filteringId,
         serverData,
         setServerData: (v: ServerInterface) => {
             setServerData(v);
         },
-        setHomeParcPrepFile: (v: ParcPrepAllDetailsInterface) => {
-            setHomeParcPrep(v);
+        setHomeEvacuationFile: (v: EvacuationAllDetailsInterface) => {
+            setHomeEvacuation(v);
         },
         setFilteringId: (v: string) => {
             setFilteringId(v);
@@ -117,8 +117,8 @@ const App = () => {
         setUser: (v: UserInterface) => {
             setUser(v);
         },
-        setDefaultParc: (v: DefParcInterface) => {
-            setDefParc(v);
+        setDefaultEvac: (v: DefEvacInterface) => {
+            setDefEvac(v);
         },
         setCubers: (v: CuberInterface | CuberInterface[]) => {
             if (Array.isArray(v)) {
@@ -134,11 +134,11 @@ const App = () => {
                 setGasolines([...gasolines, v]);
             }
         },
-        setParcIds: (v: string | string[]) => {
+        setEvacIds: (v: string | string[]) => {
             if (Array.isArray(v)) {
-                setParcIds(v);
+                setEvacIds(v);
             } else {
-                setParcIds([...parcIds, v]);
+                setEvacIds([...evacIds, v]);
             }
         },
         setSites: (v: SiteInterface | SiteInterface[]) => {
@@ -155,27 +155,27 @@ const App = () => {
                 setLogs([...logs, v]);
             }
         },
-        setParcPrepFiles: (
-            v: ParcPrepAllDetailsInterface | ParcPrepAllDetailsInterface[]
+        setEvacuationFiles: (
+            v: EvacuationAllDetailsInterface | EvacuationAllDetailsInterface[]
         ) => {
             if (Array.isArray(v)) {
-                setParcPreps(v);
+                setEvacuations(v);
             } else {
-                setParcPreps([...parcPrepFiles, v]);
+                setEvacuations([...evacuationFiles, v]);
             }
         }
     };
 
     const refreshDefault = () => {
-        getDefaultParcId().then((value: DefParcInterface[]) => {
+        getDefaultEvacId().then((value: DefEvacInterface[]) => {
             if (value && value.length) {
-                setDefParc(value[0]);
-                setFilteringId(`${value[0].parcId}`);
-                getParcPrepFileById(value[0].parcId).then((value1) => {
+                setDefEvac(value[0]);
+                setFilteringId(`${value[0].evacId}`);
+                getEvacuationFileById(value[0].evacId).then((value1) => {
                     if (value1) {
                         if (value1.length) {
-                            setHomeParcPrep(value1[0]);
-                            getLogs(value[0].parcId).then(
+                            setHomeEvacuation(value1[0]);
+                            getLogs(value[0].evacId).then(
                                 (value2: LogDetailsInterface[]) => {
                                     setLogs(value2);
 
@@ -189,10 +189,10 @@ const App = () => {
                                 }
                             );
                         } else {
-                            setHomeParcPrep(null);
+                            setHomeEvacuation(null);
                         }
                     } else {
-                        setHomeParcPrep(null);
+                        setHomeEvacuation(null);
                     }
                 });
             }
@@ -207,12 +207,12 @@ const App = () => {
         });
     };
 
-    const refreshAllParcFiles = () => {
-        getParcPrepFiles().then((value: ParcPrepAllDetailsInterface[]) => {
+    const refreshAllEvacFiles = () => {
+        getEvacuationFiles().then((value: EvacuationAllDetailsInterface[]) => {
             if (value && value.length) {
-                setParcPreps(value);
-                getParcPrepFilesIds().then((value1: string[]) => {
-                    setParcIds(value1);
+                setEvacuations(value);
+                getEvacuationFilesIds().then((value1: string[]) => {
+                    setEvacIds(value1);
                 });
             }
         });
@@ -239,11 +239,11 @@ const App = () => {
     useEffect(() => {
         refreshDefault();
         refreshAux();
-        refreshAllParcFiles();
+        refreshAllEvacFiles();
         refreshServerData();
 
-        eventSub(EventTopicEnum.updateParcPrep, () => {
-            refreshAllParcFiles();
+        eventSub(EventTopicEnum.updateEvacuation, () => {
+            refreshAllEvacFiles();
             refreshDefault();
         });
 
@@ -322,8 +322,8 @@ const App = () => {
                             tabBarLabel: translate(BarLabelNameEnum[route.name])
                         })}>
                         <TAB.Screen
-                            name="parcPrepStack"
-                            component={ParcPrepStackScreens}
+                            name="evacuationStack"
+                            component={EvacuationStackScreens}
                         />
                         <TAB.Screen
                             name="logsStack"
