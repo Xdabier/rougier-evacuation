@@ -112,8 +112,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
         MainStateContext
     );
 
-    const validForm = () =>
-        !!(idValid && && cuber && site);
+    const validForm = () => !!(idValid && truckNumber && driver && date);
 
     const onSelectMenu = (list: 'cubers' | 'sites' | 'none'): void => {
         setSelectedList(list);
@@ -126,43 +125,52 @@ const AddEvacFileDetails: React.FunctionComponent<{
 
     const clearFields = () => {
         setId('');
-        setAac('');
         setDate(new Date());
-        setCuber(undefined);
-        setSite(undefined);
+        setArrivalTime(new Date());
+        setDepartureTime(new Date());
+        setDriver(undefined);
+        setTruckNumber('');
+        setPointer('');
+        setReceiver('');
+        setTransporter('');
     };
 
     useEffect(() => {
         if (oldFile) {
             setId(oldFile.id);
-            setAacValid(true);
             setIdValid(true);
-            setCuber({
-                name: oldFile.cuberName,
-                code: oldFile.cuberCode
+            setStartParc({
+                name: oldFile.departureParcName,
+                code: oldFile.departureParcCode
             });
-            setSite({
-                name: oldFile.siteName,
-                code: oldFile.siteCode
+            setArrivalParc({
+                name: oldFile.arrivalParcName,
+                code: oldFile.arrivalParcCode
             });
             setDate(new Date(oldFile.creationDate));
-            setDefaultEvac(!!oldFile.isDefault);
+            setDefaultEvacFile(!!oldFile.isDefault);
         }
     }, [oldFile]);
 
     const checkIfOnlyDefaultChanged = () =>
         date.toISOString() === oldFile?.creationDate &&
-        cuber?.code === oldFile.cuberCode &&
-        site?.code === oldFile.siteCode;
+        driver?.code === oldFile.driverCode;
 
     const confirmInsertion = () => {
-        if (validForm() && cuber && site) {
+        if (validForm() && driver && truckNumber) {
             const EL: EvacuationInterface = {
                 id,
                 creationDate: date.toISOString(),
-                cuber: cuber.code,
-                site: site.code,
-                defaultEvacFile: defaultEvac ? 1 : 0
+                driver: driver.code,
+                defaultEvacFile: defaultEvacFile ? 1 : 0,
+                truckNumber,
+                receiver,
+                pointer,
+                transporter,
+                startParc: startParc ? startParc.code : '',
+                arrivalParc: arrivalParc ? arrivalParc.code : '',
+                arrivalTime: arrivalTime.toISOString(),
+                departureTime: departureTime.toISOString()
             };
 
             if (oldFile) {
@@ -219,7 +227,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
         <MatButton
             onPress={() => {
                 if (selectedList === 'cubers') {
-                    setCuber(item);
+                    setDriver(item);
                 } else {
                     setSite(item);
                 }
@@ -277,7 +285,9 @@ const AddEvacFileDetails: React.FunctionComponent<{
                     <FormInput
                         maxLength={25}
                         title={translate('modals.evacuation.fields.id.label')}
-                        placeholder={translate('modals.evacuation.fields.id.ph')}
+                        placeholder={translate(
+                            'modals.evacuation.fields.id.ph'
+                        )}
                         onChangeText={setId}
                         value={id}
                         pattern={['^(.){3,}$']}
@@ -289,7 +299,9 @@ const AddEvacFileDetails: React.FunctionComponent<{
                     <FormInput
                         maxLength={8}
                         title={translate('modals.evacuation.fields.aac.label')}
-                        placeholder={translate('modals.evacuation.fields.aac.ph')}
+                        placeholder={translate(
+                            'modals.evacuation.fields.aac.ph'
+                        )}
                         onChangeText={setAac}
                         value={aac}
                         pattern={[
@@ -300,7 +312,9 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         required
                     />
                     <SelectInput
-                        title={translate('modals.evacuation.fields.cuber.label')}
+                        title={translate(
+                            'modals.evacuation.fields.cuber.label'
+                        )}
                         placeholder={translate(
                             'modals.evacuation.fields.cuber.ph'
                         )}
