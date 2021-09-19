@@ -1,8 +1,14 @@
 export interface EvacuationInterface {
-    aac: string;
-    cuber: string;
-    site: string;
+    transporter: string;
     creationDate: string;
+    truckNumber: string;
+    driver: string;
+    departureTime: string;
+    arrivalTime: string;
+    startParc: string;
+    arrivalParc: string;
+    pointer: string;
+    receiver: string;
     allSynced?: 0 | 1;
     defaultEvacFile?: 0 | 1;
     id: string;

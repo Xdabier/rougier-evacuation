@@ -18,7 +18,7 @@ export const getLogs = async (
         const RES: ResultSet = await SQLiteService.executeQuery(
             `SELECT l.evacuationId, l.creationDate, l.barCode,
             l.logging, l.indicator, l.lengthVal, l.id, l.dgb, l.dpb, l.diameter, l.volume,
-            l.quality, l.status, l.statusPattern, g.code AS gasCode, g.name
+            l.quality, l.status, l.statusPattern, l.comment, g.code AS gasCode, g.name
             AS gasName FROM log AS l INNER JOIN gasoline AS g
             ON g.code = l.gasoline WHERE l.evacuationId = ?;`,
             [evacId]
@@ -42,7 +42,7 @@ export const getRawLogs = async (
         const RES: ResultSet = await SQLiteService.executeQuery(
             `SELECT l.barCode, l.logging, l.indicator,
             l.lengthVal, l.id, l.dgb, l.dpb, l.diameter, l.volume,
-            l.quality, l.status, l.statusPattern, l.gasoline FROM log AS l
+            l.quality, l.status, l.statusPattern, l.comment, l.gasoline FROM log AS l
             WHERE l.evacuationId = ?;`,
             [evacId]
         );

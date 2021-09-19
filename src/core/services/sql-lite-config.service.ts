@@ -1,9 +1,9 @@
 import {DatabaseParams, openDatabase} from 'react-native-sqlite-storage';
 
 const PARAMS: DatabaseParams = {
-    name: 'forest',
+    name: 'evacuation',
     location: 'default',
-    createFromLocation: '~forest.db'
+    createFromLocation: '~evacuation.db'
 };
 
 export default openDatabase(

@@ -92,12 +92,17 @@ const AddEvacFileDetails: React.FunctionComponent<{
 }) => {
     const [id, setId] = useState<string>('');
     const [idValid, setIdValid] = useState<boolean | boolean[]>(true);
-    const [aac, setAac] = useState<string>('');
-    const [aacValid, setAacValid] = useState<boolean | boolean[]>(true);
-    const [cuber, setCuber] = useState<CuberInterface>();
-    const [site, setSite] = useState<SiteInterface>();
+    const [driver, setDriver] = useState<CuberInterface>();
+    const [truckNumber, setTruckNumber] = useState<string>('');
+    const [receiver, setReceiver] = useState<string>('');
+    const [pointer, setPointer] = useState<string>('');
+    const [startParc, setStartParc] = useState<SiteInterface>();
+    const [arrivalParc, setArrivalParc] = useState<SiteInterface>();
+    const [transporter, setTransporter] = useState<string>('');
+    const [arrivalTime, setArrivalTime] = useState<Date>(new Date());
+    const [departureTime, setDepartureTime] = useState<Date>(new Date());
     const [date, setDate] = useState<Date>(new Date());
-    const [defaultEvac, setDefaultEvac] = useState<boolean>(true);
+    const [defaultEvacFile, setDefaultEvacFile] = useState<boolean>(true);
 
     const [selectedList, setSelectedList] = useState<
         'cubers' | 'sites' | 'none'
@@ -108,7 +113,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
     );
 
     const validForm = () =>
-        !!(idValid && aacValid && aac && aac.length && cuber && site);
+        !!(idValid && && cuber && site);
 
     const onSelectMenu = (list: 'cubers' | 'sites' | 'none'): void => {
         setSelectedList(list);
@@ -130,7 +135,6 @@ const AddEvacFileDetails: React.FunctionComponent<{
     useEffect(() => {
         if (oldFile) {
             setId(oldFile.id);
-            setAac(oldFile.aac);
             setAacValid(true);
             setIdValid(true);
             setCuber({
@@ -149,15 +153,13 @@ const AddEvacFileDetails: React.FunctionComponent<{
     const checkIfOnlyDefaultChanged = () =>
         date.toISOString() === oldFile?.creationDate &&
         cuber?.code === oldFile.cuberCode &&
-        site?.code === oldFile.siteCode &&
-        aac === oldFile.aac;
+        site?.code === oldFile.siteCode;
 
     const confirmInsertion = () => {
         if (validForm() && cuber && site) {
             const EL: EvacuationInterface = {
                 id,
                 creationDate: date.toISOString(),
-                aac,
                 cuber: cuber.code,
                 site: site.code,
                 defaultEvacFile: defaultEvac ? 1 : 0
