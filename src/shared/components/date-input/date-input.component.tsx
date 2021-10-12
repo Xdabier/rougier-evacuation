@@ -8,6 +8,7 @@ import CommonStyles, {
     widthPercentageToDP
 } from '../../../styles';
 import MatButton from '../mat-button.component';
+import {convertToTimeOnly} from '../../../core/services/sync-tools.service';
 
 const {
     fullViewWidthInside,
@@ -59,18 +60,33 @@ const STYLES = StyleSheet.create({
 const DateInput: React.FunctionComponent<{
     title: string;
     value: Date;
+    mode?: 'date' | 'time';
+    required?: boolean;
     onDateChange: (newDate: Date) => void;
 }> = ({
     title,
     value,
+    required,
+    mode,
     onDateChange
 }: {
     title: string;
     value: Date;
+    mode?: 'date' | 'time';
+    required?: boolean;
     onDateChange: (newDate: Date) => void;
 }) => {
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
+    const showCalClockValue = (dateTime: Date): string => {
+        if (dateTime) {
+            if (mode === 'date') {
+                return new Date(dateTime).toLocaleDateString();
+            }
+            return convertToTimeOnly(new Date(dateTime));
+        }
+        return '';
+    };
     const onDateSelection = (event: Event, selectedDate?: Date) => {
         setShowDatePicker(false);
         if (selectedDate) {
@@ -88,7 +104,9 @@ const DateInput: React.FunctionComponent<{
                     justifyAlignLeftVertical,
                     STYLES.fieldContainer
                 ]}>
-                <Text style={[STYLES.label, STYLES.textStyle]}>{title}</Text>
+                <Text style={[STYLES.label, STYLES.textStyle]}>
+                    {required ? `${title} *` : title}
+                </Text>
 
                 <TouchableWithoutFeedback
                     onPress={() => {
@@ -103,9 +121,7 @@ const DateInput: React.FunctionComponent<{
                         ]}>
                         <View>
                             <Text style={[STYLES.textStyle]}>
-                                {value
-                                    ? new Date(value).toLocaleDateString()
-                                    : ''}
+                                {showCalClockValue(value)}
                             </Text>
                         </View>
 
@@ -130,11 +146,17 @@ const DateInput: React.FunctionComponent<{
                 <RNDateTimePicker
                     testID="dateTimePicker"
                     value={value}
+                    mode={mode || 'date'}
                     onChange={onDateSelection}
                 />
             )}
         </>
     );
+};
+
+DateInput.defaultProps = {
+    required: false,
+    mode: 'date'
 };
 
 export default DateInput;

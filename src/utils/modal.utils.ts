@@ -4,15 +4,15 @@ import {translate} from './i18n.utils';
 export const requestCloseModal = (callback: () => void, msg?: string) => {
     const ALERT_BTNS: AlertButton[] = [
         {
+            text: translate('common.no'),
+            style: 'cancel'
+        },
+        {
             text: translate('common.yes'),
             style: 'default',
             onPress: () => {
                 callback();
             }
-        },
-        {
-            text: translate('common.no'),
-            style: 'cancel'
         }
     ];
     Alert.alert(

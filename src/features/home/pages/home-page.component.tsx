@@ -9,7 +9,7 @@ import {
     View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useContext, useMemo, useState} from 'react';
+import {useContext, useEffect, useMemo, useState} from 'react';
 import {publish as eventPub} from 'pubsub-js';
 import {HomeScreenProps} from '../../../core/types/home-screen-props.type';
 import CommonStyles, {

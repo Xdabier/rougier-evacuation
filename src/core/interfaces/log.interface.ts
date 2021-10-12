@@ -14,7 +14,7 @@ export interface LogInterface {
     quality: string;
     status: string;
     statusPattern: string;
-    comment: string;
+    comment?: string;
 }
 
 export interface LogDetailsInterface {

@@ -1,25 +1,32 @@
-interface OdooEvacuationBodyInterface {
-    aac: string;
-    cuber: string;
-    site: string;
-    creation_date: string;
-    name: string;
+export interface OdooEvacuationBodyInterface {
+    num_fiche: string;
+    chauffeur: string;
+    num_camion: string;
+    transporteur?: string;
+    date: string;
+    heure_depart?: string;
+    heure_arrivee?: string;
+    parc_depart?: string;
+    parc_arrivee?: string;
+    pointeur?: string;
+    receptionnaire?: string;
 }
 
 export interface OdooLogsBodyInterface {
     barcode: string;
     num_abattage: number;
     num_indice: number;
-    longueur: number;
     num_bille: string;
+    diameter_moyen: number;
     dgb: number;
     dpb: number;
-    diameter_moyen: number;
+    longueur: number;
     volume: number;
     quality: string;
     statut?: string;
     motif_statut?: string;
     essence: string;
+    commentaire?: string;
 }
 
 export interface OdooSyncBodyInterface extends OdooEvacuationBodyInterface {

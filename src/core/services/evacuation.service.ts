@@ -88,10 +88,10 @@ export const getRawEvacuationFileById = async (
 ): Promise<EvacuationInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.creationDate, evac.cuber,
-            evac.truckNumber, evac.driver, evac.departureTime, evac.arrivalTime,
-            evac.startParc, evac.arrivalParc, evac.pointer, evac.receiver,
-            evac.site FROM evacuation AS evac WHERE evac.id = ?;`,
+            `SELECT evac.id, evac.creationDate, evac.driver,
+            evac.truckNumber, evac.departureTime, evac.arrivalTime,
+            evac.departureParc, evac.arrivalParc, evac.transporter, evac.pointer,
+            evac.receiver FROM evacuation AS evac WHERE evac.id = ?;`,
             [id]
         );
         if (close && !SQLiteService.finished) {
@@ -111,13 +111,13 @@ export const getEvacuationFileById = async (
 ): Promise<EvacuationAllDetailsInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.aac, evac.creationDate, evac.allSynced,
+            `SELECT evac.id, evac.creationDate, evac.allSynced, evac.transporter,
             evac.truckNumber, evac.driver, evac.departureTime, evac.arrivalTime,
-            evac.startParc, evac.arrivalParc, evac.pointer, evac.receiver,
-            si.name AS siteName, si.code AS siteCode, cu.name AS cuberName,
-            cu.code AS cuberCode, evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
-            evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS
-            cu ON cu.code = evac.cuber JOIN site AS si ON si.code = evac.site
+            evac.pointer, evac.receiver, depParc.name AS departureParcName, depParc.code AS departureParcCode,
+            cu.name AS driverName, cu.code AS driverCode, arrParc.name AS arrivalParcName, arrParc.code AS arrivalParcCode,
+            evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
+            evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS cu ON cu.code = evac.driver
+            JOIN site AS depParc ON depParc.code = evac.departureParc JOIN site AS arrParc ON arrParc.code = evac.arrivalParc
             INNER JOIN evacuationStats AS evacStats ON evacStats.evacuationId = evac.id WHERE evac.id = ?;`,
             [id]
         );
@@ -137,13 +137,13 @@ export const getEvacuationFiles = async (
 ): Promise<EvacuationAllDetailsInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.creationDate, evac.allSynced,
+            `SELECT evac.id, evac.creationDate, evac.allSynced, evac.transporter,
             evac.truckNumber, evac.driver, evac.departureTime, evac.arrivalTime,
-            evac.startParc, evac.arrivalParc, evac.pointer, evac.receiver,
-            si.name AS siteName, si.code AS siteCode, cu.name AS cuberName,
-            cu.code AS cuberCode, evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
-            evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS
-            cu ON cu.code = evac.cuber INNER JOIN site AS si ON si.code = evac.site
+            evac.pointer, evac.receiver, depParc.name AS departureParcName, depParc.code AS departureParcCode,
+            cu.name AS driverName, cu.code AS driverCode, arrParc.name AS arrivalParcName, arrParc.code AS arrivalParcCode,
+            evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
+            evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS cu ON cu.code = evac.driver
+            JOIN site AS depParc ON depParc.code = evac.departureParc JOIN site AS arrParc ON arrParc.code = evac.arrivalParc
             INNER JOIN evacuationStats AS evacStats ON evacStats.evacuationId = evac.id;`
         );
         if (close && !SQLiteService.finished) {
@@ -163,7 +163,7 @@ export const insertEvacuationFile = async (
     try {
         const {defaultEvacFile, ...others} = element;
         const KEYS = Object.keys(others);
-        const STR: string = `INSERT INTO evac (${KEYS.join(
+        const STR: string = `INSERT INTO evacuation (${KEYS.join(
             ', '
         )}) VALUES (${KEYS.map(() => '?').join(', ')});`;
         await SQLiteService.executeQuery(

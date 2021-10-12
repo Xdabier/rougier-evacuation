@@ -11,8 +11,6 @@ export interface EvacuationAllDetailsInterface {
     transporter: string;
     departureTime: string;
     arrivalTime: string;
-    startParc: string;
-    arrivalParc: string;
     pointer: string;
     receiver: string;
     lastLogDate: string | null;

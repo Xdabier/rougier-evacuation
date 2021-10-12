@@ -94,6 +94,7 @@ const AddLogDetails: React.FunctionComponent<{
     const [cameraModalShow, setCameraModalShow] = useState<boolean>(false);
     const [barCode, setBarCode] = useState<string>(scannedBarCode || '');
     const [logging, setLogging] = useState<string>('');
+    const [comment, setComment] = useState<string>('');
     const [index, setIndex] = useState<string>('');
     const [id, setId] = useState<string>('');
     const [gasoline, setGasoline] = useState<GasolineInterface>({
@@ -201,6 +202,7 @@ const AddLogDetails: React.FunctionComponent<{
             setQuality(data ? `${data.quality}` : '');
             setStatus(data ? `${data.status}` : '');
             setPatternStatus(data ? `${data.statusPattern}` : '');
+            setComment(data ? `${data.comment}` : '');
 
             if (scannedBarCode && !data) {
                 setBarCode(scannedBarCode);
@@ -261,7 +263,8 @@ const AddLogDetails: React.FunctionComponent<{
                 status,
                 lengthVal: +lengthVal,
                 statusPattern: patternStatus,
-                volume: +volume
+                volume: +volume,
+                comment: comment || undefined
             };
 
             if (oldLog) {
@@ -488,6 +491,14 @@ const AddLogDetails: React.FunctionComponent<{
                         )}
                         onChangeText={setPatternStatus}
                         value={patternStatus}
+                    />
+                    <FormInput
+                        title={translate('modals.logs.fields.comments.label')}
+                        placeholder={translate(
+                            'modals.logs.fields.comments.ph'
+                        )}
+                        onChangeText={setComment}
+                        value={comment}
                     />
                     <View style={[vSpacer100]} />
                 </ScrollView>

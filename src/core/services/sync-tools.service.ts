@@ -4,6 +4,7 @@ import {getRawEvacuationFileById} from './evacuation.service';
 import {LogInterface} from '../interfaces/log.interface';
 import {getRawLogs} from './logs.service';
 import {
+    OdooEvacuationBodyInterface,
     OdooLogsBodyInterface,
     OdooSyncBodyInterface
 } from '../interfaces/odoo-sync-body.interface';
@@ -12,14 +13,14 @@ export const generateSingleSyncFile = async (
     evacuationId: string
 ): Promise<SyncDataInterface> => {
     try {
-        const PP: EvacuationInterface[] = await getRawEvacuationFileById(
+        const EVAC: EvacuationInterface[] = await getRawEvacuationFileById(
             evacuationId
         );
 
-        if (PP.length && PP[0].id) {
-            const LOGS: LogInterface[] = await getRawLogs(PP[0]?.id);
+        if (EVAC.length && EVAC[0].id) {
+            const LOGS: LogInterface[] = await getRawLogs(EVAC[0]?.id);
             return {
-                ...PP[0],
+                ...EVAC[0],
                 logs: LOGS
             };
         }
@@ -55,6 +56,10 @@ export const convertLogsToSyncLogs = (
             ODOO_LOG_BODY.motif_statut = log.statusPattern;
         }
 
+        if (log.comment) {
+            ODOO_LOG_BODY.commentaire = log.comment;
+        }
+
         return ODOO_LOG_BODY;
     });
 
@@ -70,15 +75,63 @@ const convertDate = (date: Date): string =>
         date.getDate()
     )}/${date.getFullYear()}`;
 
+export const convertToTimeOnly = (date: Date): string =>
+    `${parseTime(date.getHours())}:${parseTime(date.getMinutes())}`;
+
 export const convertSyncFile = (
     syncFile: SyncDataInterface
-): OdooSyncBodyInterface => ({
-    name: syncFile.id,
-    sync: true,
-    aac: syncFile.aac,
-    billes: convertLogsToSyncLogs(syncFile.logs),
-    creation_date: convertDate(new Date(syncFile.creationDate)),
-    cuber: syncFile.cuber,
-    site: syncFile.site,
-    sync_date: convertDate(new Date())
-});
+): OdooSyncBodyInterface => {
+    const ODOO_EVAC: OdooEvacuationBodyInterface = {
+        num_fiche: syncFile.id,
+        date: convertDate(new Date(syncFile.creationDate)),
+        chauffeur: syncFile.driver,
+        num_camion: syncFile.truckNumber
+    };
+
+    if (syncFile.transporter) {
+        ODOO_EVAC.transporteur = syncFile.transporter;
+    }
+
+    if (syncFile.departureParc) {
+        ODOO_EVAC.parc_depart = syncFile.departureParc;
+    }
+
+    if (syncFile.arrivalParc) {
+        ODOO_EVAC.parc_arrivee = syncFile.arrivalParc;
+    }
+
+    if (syncFile.departureTime) {
+        ODOO_EVAC.heure_depart = convertToTimeOnly(
+            new Date(syncFile.departureTime)
+        );
+    }
+
+    if (syncFile.arrivalTime) {
+        ODOO_EVAC.heure_arrivee = convertToTimeOnly(
+            new Date(syncFile.arrivalTime)
+        );
+    }
+
+    if (syncFile.pointer) {
+        ODOO_EVAC.pointeur = syncFile.pointer;
+    }
+
+    if (syncFile.receiver) {
+        ODOO_EVAC.receptionnaire = syncFile.receiver;
+    }
+
+    console.log(
+        JSON.stringify({
+            ...ODOO_EVAC,
+            sync_date: convertDate(new Date()),
+            sync: true,
+            billes: convertLogsToSyncLogs(syncFile.logs)
+        })
+    );
+    return {
+        ...ODOO_EVAC,
+        sync_date: convertDate(new Date()),
+        sync: true,
+        billes: convertLogsToSyncLogs(syncFile.logs)
+    };
+};

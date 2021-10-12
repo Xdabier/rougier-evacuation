@@ -159,6 +159,10 @@
         "patternStatus": {
           "label": "Motif status",
           "ph": "Enter pattern status"
+        },
+        "comments": {
+          "label": "Comment",
+          "ph": "Enter comment"
         }
       }
     },
@@ -172,22 +176,45 @@
           "ph": "ex: FICHE-4569",
           "err": "The ID should be alpha-num and at least 3 characters."
         },
-        "aac": {
-          "label": "AAC",
-          "ph": "ex: 23-26-95",
-          "err": "It should be following this pattern (one or two numbers)-(one or two numbers)-(one or two numbers)"
+        "driver": {
+          "label": "Driver",
+          "ph": "Please select a driver"
         },
-        "cuber": {
-          "label": "Cuber",
-          "ph": "Select cuber"
+        "departureParc": {
+          "label": "Departure parc",
+          "ph": "Please select a departure parc"
         },
-        "site": {
-          "label": "Site",
-          "ph": "Select site"
+        "arrivalParc": {
+          "label": "Arrival parc",
+          "ph": "Please select an arrival parc"
+        },
+        "departureTime": {
+          "label": "Departure time",
+          "ph": "Please select a departure time"
+        },
+        "arrivalTime": {
+          "label": "Arrival time",
+          "ph": "Please select an arrival time"
         },
         "date": {
           "label": "Date",
           "ph": "Please select date"
+        },
+        "transporter": {
+          "label": "Transporter",
+          "ph": "Please indicate the transporter"
+        },
+        "pointer": {
+          "label": "Pointer",
+          "ph": "Please indicate the pointer"
+        },
+        "receiver": {
+          "label": "Receiver",
+          "ph": "Please indicate the receiver"
+        },
+        "truckNumber": {
+          "label": "Truck number",
+          "ph": "Please indicate the truck number"
         },
         "evacAsDefault": {
           "label": "Set this evac as default"

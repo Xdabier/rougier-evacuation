@@ -128,20 +128,36 @@ const EvacuationCard: React.FunctionComponent<{
                 )}
             </Text>
             <Text style={[info, regularFont, textAlignLeft]}>
-                {`${translate('modals.evacuation.fields.aac.label')}: ${
-                    evacuationFile.aac
+                {`${translate('modals.evacuation.fields.driver.label')}: ${
+                    evacuationFile.driverName
                 }`}
             </Text>
             <Text style={[info, regularFont, textAlignLeft]}>
-                {`${translate('modals.evacuation.fields.cuber.label')}: ${
-                    evacuationFile.cuberName
+                {`${translate('modals.evacuation.fields.truckNumber.label')}: ${
+                    evacuationFile.truckNumber
                 }`}
             </Text>
-            <Text style={[info, regularFont, textAlignLeft]}>
-                {`${translate('modals.evacuation.fields.site.label')}: ${
-                    evacuationFile.siteName
-                }`}
-            </Text>
+            {evacuationFile.transporter && (
+                <Text style={[info, regularFont, textAlignLeft]}>
+                    {`${translate(
+                        'modals.evacuation.fields.transporter.label'
+                    )}: ${evacuationFile.transporter}`}
+                </Text>
+            )}
+            {evacuationFile.departureParcName && (
+                <Text style={[info, regularFont, textAlignLeft]}>
+                    {`${translate(
+                        'modals.evacuation.fields.departureParc.label'
+                    )}: ${evacuationFile.departureParcName}`}
+                </Text>
+            )}
+            {evacuationFile.arrivalParcName && (
+                <Text style={[info, regularFont, textAlignLeft]}>
+                    {`${translate(
+                        'modals.evacuation.fields.arrivalParc.label'
+                    )}: ${evacuationFile.arrivalParcName}`}
+                </Text>
+            )}
             <Text style={[info, regularFont, textAlignLeft]}>
                 {translate('common.creationDate', {
                     date: new Date(

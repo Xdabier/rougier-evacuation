@@ -69,6 +69,8 @@ const STYLES = StyleSheet.create({
     }
 });
 
+type SelectedListType = 'driver' | 'arrivalParc' | 'departureParc' | 'none';
+
 const actionSheetRef: RefObject<ActionSheetComponent> = createRef();
 
 const AddEvacFileDetails: React.FunctionComponent<{
@@ -92,11 +94,21 @@ const AddEvacFileDetails: React.FunctionComponent<{
 }) => {
     const [id, setId] = useState<string>('');
     const [idValid, setIdValid] = useState<boolean | boolean[]>(true);
+    const [receiverValid, setReceiverValid] = useState<boolean | boolean[]>(
+        true
+    );
+    const [pointerValid, setPointerValid] = useState<boolean | boolean[]>(true);
+    const [transporterValid, setTransporterValid] = useState<
+        boolean | boolean[]
+    >(true);
+    const [truckNumberValid, setTruckNumberValid] = useState<
+        boolean | boolean[]
+    >(true);
     const [driver, setDriver] = useState<CuberInterface>();
     const [truckNumber, setTruckNumber] = useState<string>('');
     const [receiver, setReceiver] = useState<string>('');
     const [pointer, setPointer] = useState<string>('');
-    const [startParc, setStartParc] = useState<SiteInterface>();
+    const [departureParc, setDepartureParc] = useState<SiteInterface>();
     const [arrivalParc, setArrivalParc] = useState<SiteInterface>();
     const [transporter, setTransporter] = useState<string>('');
     const [arrivalTime, setArrivalTime] = useState<Date>(new Date());
@@ -104,17 +116,25 @@ const AddEvacFileDetails: React.FunctionComponent<{
     const [date, setDate] = useState<Date>(new Date());
     const [defaultEvacFile, setDefaultEvacFile] = useState<boolean>(true);
 
-    const [selectedList, setSelectedList] = useState<
-        'cubers' | 'sites' | 'none'
-    >('none');
+    const [selectedList, setSelectedList] = useState<SelectedListType>('none');
 
     const {keyboardHeight} = useContext<MainStateContextInterface>(
         MainStateContext
     );
 
-    const validForm = () => !!(idValid && truckNumber && driver && date);
+    const validForm = () =>
+        !!(
+            idValid &&
+            truckNumberValid &&
+            driver &&
+            truckNumber &&
+            date &&
+            pointerValid &&
+            receiverValid &&
+            transporterValid
+        );
 
-    const onSelectMenu = (list: 'cubers' | 'sites' | 'none'): void => {
+    const onSelectMenu = (list: SelectedListType): void => {
         setSelectedList(list);
         if (list === 'none') {
             actionSheetRef.current?.setModalVisible(false);
@@ -125,21 +145,28 @@ const AddEvacFileDetails: React.FunctionComponent<{
 
     const clearFields = () => {
         setId('');
-        setDate(new Date());
-        setArrivalTime(new Date());
-        setDepartureTime(new Date());
-        setDriver(undefined);
+        setTransporter('');
+        setReceiver('');
         setTruckNumber('');
         setPointer('');
-        setReceiver('');
-        setTransporter('');
+        setIdValid(false);
+        setDate(new Date());
+        setDriver(undefined);
+        setDepartureParc(undefined);
+        setArrivalParc(undefined);
+        setDepartureTime(new Date());
+        setArrivalTime(new Date());
     };
 
     useEffect(() => {
         if (oldFile) {
             setId(oldFile.id);
             setIdValid(true);
-            setStartParc({
+            setDriver({
+                name: oldFile.driverName,
+                code: oldFile.driverCode
+            });
+            setDepartureParc({
                 name: oldFile.departureParcName,
                 code: oldFile.departureParcCode
             });
@@ -148,29 +175,49 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 code: oldFile.arrivalParcCode
             });
             setDate(new Date(oldFile.creationDate));
+            setDepartureTime(new Date(oldFile.departureTime));
+            setArrivalTime(new Date(oldFile.arrivalTime));
+            setTruckNumber(oldFile.truckNumber);
+            setTransporter(oldFile.transporter);
+            setPointer(oldFile.pointer);
+            setReceiver(oldFile.receiver);
             setDefaultEvacFile(!!oldFile.isDefault);
         }
     }, [oldFile]);
 
     const checkIfOnlyDefaultChanged = () =>
         date.toISOString() === oldFile?.creationDate &&
-        driver?.code === oldFile.driverCode;
+        departureTime.toISOString() === oldFile?.departureTime &&
+        arrivalTime.toISOString() === oldFile?.arrivalTime &&
+        driver?.code === oldFile.driverCode &&
+        departureParc?.code === oldFile.departureParcCode &&
+        truckNumber === oldFile.truckNumber &&
+        pointer === oldFile.pointer &&
+        receiver === oldFile.receiver &&
+        transporter === oldFile.transporter &&
+        arrivalParc?.code === oldFile.arrivalParcCode;
 
     const confirmInsertion = () => {
-        if (validForm() && driver && truckNumber) {
+        if (validForm() && driver) {
             const EL: EvacuationInterface = {
                 id,
                 creationDate: date.toISOString(),
-                driver: driver.code,
                 defaultEvacFile: defaultEvacFile ? 1 : 0,
-                truckNumber,
-                receiver,
-                pointer,
-                transporter,
-                startParc: startParc ? startParc.code : '',
-                arrivalParc: arrivalParc ? arrivalParc.code : '',
+                departureParc:
+                    departureParc && departureParc.code
+                        ? departureParc.code
+                        : undefined,
+                arrivalParc:
+                    arrivalParc && arrivalParc.code
+                        ? arrivalParc.code
+                        : undefined,
+                driver: driver.code,
                 arrivalTime: arrivalTime.toISOString(),
-                departureTime: departureTime.toISOString()
+                departureTime: departureTime.toISOString(),
+                truckNumber,
+                transporter: transporter || undefined,
+                pointer: pointer || undefined,
+                receiver: receiver || undefined
             };
 
             if (oldFile) {
@@ -226,11 +273,20 @@ const AddEvacFileDetails: React.FunctionComponent<{
     ) => (
         <MatButton
             onPress={() => {
-                if (selectedList === 'cubers') {
-                    setDriver(item);
-                } else {
-                    setSite(item);
+                switch (selectedList) {
+                    case 'arrivalParc':
+                        setArrivalParc(item);
+                        break;
+                    case 'departureParc':
+                        setDepartureParc(item);
+                        break;
+                    case 'driver':
+                        setDriver(item);
+                        break;
+                    default:
+                        break;
                 }
+
                 actionSheetRef.current?.setModalVisible(false);
             }}
             key={_i}>
@@ -244,9 +300,12 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 ]}>
                 <Icon
                     name={
-                        selectedList === 'cubers'
+                        // eslint-disable-next-line no-nested-ternary
+                        selectedList === 'driver'
                             ? 'engineering'
-                            : 'photo-size-select-actual'
+                            : selectedList === 'departureParc'
+                            ? 'flight-takeoff'
+                            : 'flight-land'
                     }
                     size={TEXT_LINE_HEIGHT}
                     color={MAIN_LIGHT_GREY}
@@ -296,43 +355,34 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         disabled={!!oldFile && !!oldFile?.id}
                         required
                     />
-                    <FormInput
-                        maxLength={8}
-                        title={translate('modals.evacuation.fields.aac.label')}
-                        placeholder={translate(
-                            'modals.evacuation.fields.aac.ph'
-                        )}
-                        onChangeText={setAac}
-                        value={aac}
-                        pattern={[
-                            '(99|[0-9]?[0-9])-(99|[0-9]?[0-9])-(99|[0-9]?[0-9])'
-                        ]}
-                        errText={translate('modals.evacuation.fields.aac.err')}
-                        onValidation={setAacValid}
-                        required
-                    />
                     <SelectInput
                         title={translate(
-                            'modals.evacuation.fields.cuber.label'
+                            'modals.evacuation.fields.driver.label'
                         )}
                         placeholder={translate(
-                            'modals.evacuation.fields.cuber.ph'
+                            'modals.evacuation.fields.driver.ph'
                         )}
                         showSelectMenu={() => {
-                            onSelectMenu('cubers');
+                            onSelectMenu('driver');
                         }}
-                        value={cuber?.name}
+                        value={driver?.name}
                         required
                     />
-                    <SelectInput
-                        title={translate('modals.evacuation.fields.site.label')}
-                        placeholder={translate(
-                            'modals.evacuation.fields.site.ph'
+                    <FormInput
+                        maxLength={25}
+                        title={translate(
+                            'modals.evacuation.fields.truckNumber.label'
                         )}
-                        showSelectMenu={() => {
-                            onSelectMenu('sites');
-                        }}
-                        value={site?.name}
+                        placeholder={translate(
+                            'modals.evacuation.fields.truckNumber.ph'
+                        )}
+                        onChangeText={setTruckNumber}
+                        value={truckNumber}
+                        pattern={['^(.){3,}$']}
+                        errText={translate(
+                            'modals.evacuation.fields.truckNumber.err'
+                        )}
+                        onValidation={setTruckNumberValid}
                         required
                     />
                     <DateInput
@@ -341,15 +391,113 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         onDateChange={(newDate: Date) => {
                             setDate(newDate);
                         }}
+                        required
+                    />
+                    <SelectInput
+                        title={translate(
+                            'modals.evacuation.fields.departureParc.label'
+                        )}
+                        placeholder={translate(
+                            'modals.evacuation.fields.departureParc.ph'
+                        )}
+                        showSelectMenu={() => {
+                            onSelectMenu('departureParc');
+                        }}
+                        value={departureParc?.name}
+                    />
+                    <SelectInput
+                        title={translate(
+                            'modals.evacuation.fields.arrivalParc.label'
+                        )}
+                        placeholder={translate(
+                            'modals.evacuation.fields.arrivalParc.ph'
+                        )}
+                        showSelectMenu={() => {
+                            onSelectMenu('arrivalParc');
+                        }}
+                        value={arrivalParc?.name}
+                    />
+                    <DateInput
+                        title={translate(
+                            'modals.evacuation.fields.departureTime.label'
+                        )}
+                        value={departureTime}
+                        onDateChange={(newDate: Date) => {
+                            setDepartureTime(newDate);
+                        }}
+                        mode="time"
+                    />
+                    <DateInput
+                        title={translate(
+                            'modals.evacuation.fields.arrivalTime.label'
+                        )}
+                        value={arrivalTime}
+                        onDateChange={(newDate: Date) => {
+                            setArrivalTime(newDate);
+                        }}
+                        mode="time"
+                    />
+                    <FormInput
+                        maxLength={25}
+                        title={translate(
+                            'modals.evacuation.fields.receiver.label'
+                        )}
+                        placeholder={translate(
+                            'modals.evacuation.fields.receiver.ph'
+                        )}
+                        onChangeText={setReceiver}
+                        value={receiver}
+                        pattern={['^(\\S{3,})?$']}
+                        errText={translate(
+                            'modals.evacuation.fields.receiver.err'
+                        )}
+                        onValidation={setReceiverValid}
+                    />
+                    <FormInput
+                        maxLength={25}
+                        title={translate(
+                            'modals.evacuation.fields.pointer.label'
+                        )}
+                        placeholder={translate(
+                            'modals.evacuation.fields.pointer.ph'
+                        )}
+                        onChangeText={setPointer}
+                        value={pointer}
+                        pattern={['^(\\S{3,})?$']}
+                        errText={translate(
+                            'modals.evacuation.fields.pointer.err'
+                        )}
+                        onValidation={setPointerValid}
+                    />
+                    <FormInput
+                        maxLength={25}
+                        title={translate(
+                            'modals.evacuation.fields.transporter.label'
+                        )}
+                        placeholder={translate(
+                            'modals.evacuation.fields.transporter.ph'
+                        )}
+                        onChangeText={setTransporter}
+                        value={transporter}
+                        pattern={['^(\\S{3,})?$']}
+                        errText={translate(
+                            'modals.evacuation.fields.transporter.err'
+                        )}
+                        onValidation={setTransporterValid}
                     />
                     <View style={[vSpacer25]} />
                     <FormCheckbox
-                        value={defaultEvac}
-                        onValueChange={setDefaultEvac}
+                        value={defaultEvacFile}
+                        onValueChange={setDefaultEvacFile}
                         title={translate(
                             'modals.evacuation.fields.evacAsDefault.label'
                         )}
                     />
+                    <View style={[vSpacer25]} />
+                    <View style={[vSpacer25]} />
+                    <View style={[vSpacer25]} />
+                    <View style={[vSpacer25]} />
+                    <View style={[vSpacer25]} />
                 </ScrollView>
             </SafeAreaView>
             <ModalFooter
@@ -369,7 +517,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 <ActionSheetContent
                     keyboardHeight={keyboardHeight}
                     actionSheetRef={actionSheetRef}
-                    valuesList={selectedList === 'cubers' ? cubers : sites}
+                    valuesList={selectedList === 'driver' ? cubers : sites}
                     renderElement={renderFilterBtn}
                 />
             </ActionSheetComponent>

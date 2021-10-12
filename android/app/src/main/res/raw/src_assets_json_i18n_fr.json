@@ -1,34 +1,34 @@
 {
     "common": {
         "home": "Acceuil",
-        "parcPrep": "Prép. parc",
+        "evacuation": "Évacuation",
         "log": "Bille",
         "settings": "Paramètres",
         "id": "ID",
         "syncing": "Synchronisation...",
         "logId": "ID bille",
         "syncError": "Erreur de synchronisation, vérifiez peut-être la configuration de votre serveur.",
-        "parcId": "ID Parc",
+        "evacId": "ID Evac",
         "succSync": "Fiche synchronisé avec succès!",
         "succAllSync": "Tous les fiches ont été synchronisés avec succès!",
-        "prepFileId": "ID fiche prép. parc {{fileId}}",
+        "evacFileId": "ID fiche évacuation {{fileId}}",
         "creationDate": "Créé le {{date}}",
         "lastLogDate": "Dernière bille le {{date}}",
         "logs": "Billes",
         "logsNumber": "{{numLogs}} Billes",
-        "addParcPrepFile": "Ajouter fiche prép. parc",
-        "editParcPrepFile": "Modifier fiche",
+        "addEvacuationFile": "Ajouter fiche évacuation",
+        "editEvacuationFile": "Modifier fiche",
         "editLog": "Modifier bille",
         "addLog": "Ajouter bille",
         "sync": "Synchroniser",
         "scanBarCode": "Scan code a barre",
+        "serverInfo": "Configurations du serveur",
         "syncAll": "Synchroniser tout",
         "synced": "Synchronisé",
         "dupErr": "Identifiant dupliqué !",
         "fr": "Français",
         "en": "Anglais",
         "yes": "Oui",
-        "serverInfo": "Configurations du serveur",
         "validate": "Valider",
         "no": "Non",
         "code": "Code: {{val}}",
@@ -64,12 +64,12 @@
         "title": "Fiche évacuation actuel"
     },
     "logsListPage": {
-        "title": "Bille de parc",
+        "title": "Bille de evac",
         "filterInputPh": "Commencez à taper l'id...",
         "noContent": "Aucun bille n'a encore été ajouté."
     },
-    "parcPrep": {
-        "noContent": "Vous devez d'abord ajouter les fiches de préparation du parc."
+    "evacuation": {
+        "noContent": "Vous devez d'abord ajouter les fiches d'évacuation."
     },
     "settings": {
         "setServer": "Configurer le serveur",
@@ -159,10 +159,14 @@
                 "patternStatus": {
                     "label": "Motif statut",
                     "ph": "Entrez la motif statut"
+                },
+                "comments": {
+                    "label": "Commentaire",
+                    "ph": "Entrez la commentaire"
                 }
             }
         },
-        "parcPrep": {
+        "evacuation": {
             "confirm": "Confirmer l'ajout de fiche",
             "succMsg": "Fiche évacuation ajouter avec succée!",
             "succMsgEdit": "Fiche évacuation modifié avec succée!",
@@ -172,24 +176,51 @@
                     "ph": "ex: FICHE-4569",
                     "err": "L'ID doit être alphanumérique et comporter au moins 3 caractères"
                 },
-                "aac": {
-                    "label": "AAC",
-                    "ph": "ex: 23-26-95",
-                    "err": "Merci de respecter ce schéma (un ou deux N°s) - (un ou deux N°s) - (un ou deux N°s)"
+                "driver": {
+                    "label": "Chauffeur",
+                    "ph": "Sélectionnez le chauffeur"
                 },
-                "cuber": {
-                    "label": "Cubeur",
-                    "ph": "Sélectionnez le cubeur"
+                "departureParc": {
+                    "label": "Parc de départ",
+                    "ph": "Sélectionner le parc de départ"
                 },
-                "site": {
-                    "label": "Chantier",
-                    "ph": "Sélectionnez le chantier"
+                "arrivalParc": {
+                    "label": "Parc d'arrivée",
+                    "ph": "Sélectionner le parc d'arrivée"
+                },
+                "departureTime": {
+                    "label": "L'heure de départ",
+                    "ph": "Sélectionnez l'heure de départ"
+                },
+                "arrivalTime": {
+                    "label": "L'heure de d'arrivée",
+                    "ph": "Sélectionnez l'heure d'arrivée"
                 },
                 "date": {
                     "label": "Date",
                     "ph": "Veuillez choisir une date"
                 },
-                "parcAsDefault": {
+                "transporter": {
+                    "label": "Transporteur",
+                    "ph": "Veuillez indiquer le transporteur",
+                    "err": "Le transporteur doit être alphanumérique et comporter au moins 3 caractères"
+                },
+                "pointer": {
+                    "label": "Pointeur",
+                    "ph": "Veuillez indiquer le pointeur",
+                    "err": "Le pointeur doit être alphanumérique et comporter au moins 3 caractères"
+                },
+                "receiver": {
+                    "label": "Réceptionnaire",
+                    "ph": "Veuillez indiquer le réceptionnaire",
+                    "err": "Le réceptionnaire doit être alphanumérique et comporter au moins 3 caractères"
+                },
+                "truckNumber": {
+                    "label": "Numéro de camion",
+                    "ph": "Veuillez indiquer le numéro du camion",
+                    "err": "Le numéro du camion doit être alphanumérique et comporter au moins 3 caractères"
+                },
+                "evacAsDefault": {
                     "label": "Choisir comme fiche actuelle"
                 }
             }
