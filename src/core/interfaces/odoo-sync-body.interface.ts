@@ -14,8 +14,8 @@ export interface OdooEvacuationBodyInterface {
 
 export interface OdooLogsBodyInterface {
     barcode: string;
-    num_abattage: number;
-    num_indice: number;
+    num_abattage: string;
+    num_indice: string;
     num_bille: string;
     diameter_moyen: number;
     dgb: number;

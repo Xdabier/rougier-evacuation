@@ -70,8 +70,12 @@ const STYLES = StyleSheet.create({
 });
 
 type SelectedListType = 'driver' | 'arrivalParc' | 'departureParc' | 'none';
+type SelectedTimeListType = 'departure' | 'arrival' | 'none';
 
 const actionSheetRef: RefObject<ActionSheetComponent> = createRef();
+const timeActionSheetRef: RefObject<ActionSheetComponent> = createRef();
+
+const hours = [...Array(24).keys()].map((a: number) => `${a}`);
 
 const AddEvacFileDetails: React.FunctionComponent<{
     modalVisible: boolean;
@@ -111,12 +115,17 @@ const AddEvacFileDetails: React.FunctionComponent<{
     const [departureParc, setDepartureParc] = useState<SiteInterface>();
     const [arrivalParc, setArrivalParc] = useState<SiteInterface>();
     const [transporter, setTransporter] = useState<string>('');
-    const [arrivalTime, setArrivalTime] = useState<Date>(new Date());
-    const [departureTime, setDepartureTime] = useState<Date>(new Date());
+    const [arrivalTime, setArrivalTime] = useState<string>('0');
+    const [departureTime, setDepartureTime] = useState<string>('0');
     const [date, setDate] = useState<Date>(new Date());
     const [defaultEvacFile, setDefaultEvacFile] = useState<boolean>(true);
 
     const [selectedList, setSelectedList] = useState<SelectedListType>('none');
+
+    const [
+        selectedTimeList,
+        setSelectedTimeList
+    ] = useState<SelectedTimeListType>('none');
 
     const {keyboardHeight} = useContext<MainStateContextInterface>(
         MainStateContext
@@ -143,6 +152,15 @@ const AddEvacFileDetails: React.FunctionComponent<{
         }
     };
 
+    const onSelectTimeMenu = (list: SelectedTimeListType): void => {
+        setSelectedTimeList(list);
+        if (list === 'none') {
+            timeActionSheetRef.current?.setModalVisible(false);
+        } else {
+            timeActionSheetRef.current?.setModalVisible();
+        }
+    };
+
     const clearFields = () => {
         setId('');
         setTransporter('');
@@ -154,8 +172,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
         setDriver(undefined);
         setDepartureParc(undefined);
         setArrivalParc(undefined);
-        setDepartureTime(new Date());
-        setArrivalTime(new Date());
+        setDepartureTime('0');
+        setArrivalTime('0');
     };
 
     useEffect(() => {
@@ -175,8 +193,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 code: oldFile.arrivalParcCode
             });
             setDate(new Date(oldFile.creationDate));
-            setDepartureTime(new Date(oldFile.departureTime));
-            setArrivalTime(new Date(oldFile.arrivalTime));
+            setDepartureTime(oldFile.departureTime);
+            setArrivalTime(oldFile.arrivalTime);
             setTruckNumber(oldFile.truckNumber);
             setTransporter(oldFile.transporter);
             setPointer(oldFile.pointer);
@@ -187,8 +205,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
 
     const checkIfOnlyDefaultChanged = () =>
         date.toISOString() === oldFile?.creationDate &&
-        departureTime.toISOString() === oldFile?.departureTime &&
-        arrivalTime.toISOString() === oldFile?.arrivalTime &&
+        departureTime === oldFile?.departureTime &&
+        arrivalTime === oldFile?.arrivalTime &&
         driver?.code === oldFile.driverCode &&
         departureParc?.code === oldFile.departureParcCode &&
         truckNumber === oldFile.truckNumber &&
@@ -212,8 +230,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         ? arrivalParc.code
                         : undefined,
                 driver: driver.code,
-                arrivalTime: arrivalTime.toISOString(),
-                departureTime: departureTime.toISOString(),
+                arrivalTime,
+                departureTime,
                 truckNumber,
                 transporter: transporter || undefined,
                 pointer: pointer || undefined,
@@ -311,6 +329,41 @@ const AddEvacFileDetails: React.FunctionComponent<{
                     color={MAIN_LIGHT_GREY}
                 />
                 <Text style={[STYLES.searchResultText]}>{item.name}</Text>
+            </View>
+        </MatButton>
+    );
+
+    const renderHourFilterBtn = ({item}: {item: string}, _i: number) => (
+        <MatButton
+            onPress={() => {
+                switch (selectedTimeList) {
+                    case 'arrival':
+                        setArrivalTime(item);
+                        break;
+                    case 'departure':
+                        setDepartureTime(item);
+                        break;
+                    default:
+                        break;
+                }
+
+                timeActionSheetRef.current?.setModalVisible(false);
+            }}
+            key={_i}>
+            <View
+                style={[
+                    scrollView,
+                    centerHorizontally,
+                    justifyAlignTLeftHorizontal,
+                    alignCenter,
+                    STYLES.searchResult
+                ]}>
+                <Icon
+                    name="av-timer"
+                    size={TEXT_LINE_HEIGHT}
+                    color={MAIN_LIGHT_GREY}
+                />
+                <Text style={[STYLES.searchResultText]}>{item}</Text>
             </View>
         </MatButton>
     );
@@ -417,25 +470,31 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         }}
                         value={arrivalParc?.name}
                     />
-                    <DateInput
+
+                    <SelectInput
                         title={translate(
                             'modals.evacuation.fields.departureTime.label'
                         )}
-                        value={departureTime}
-                        onDateChange={(newDate: Date) => {
-                            setDepartureTime(newDate);
+                        placeholder={translate(
+                            'modals.evacuation.fields.departureTime.label'
+                        )}
+                        showSelectMenu={() => {
+                            onSelectTimeMenu('departure');
                         }}
-                        mode="time"
+                        value={departureTime}
                     />
-                    <DateInput
+
+                    <SelectInput
                         title={translate(
                             'modals.evacuation.fields.arrivalTime.label'
                         )}
-                        value={arrivalTime}
-                        onDateChange={(newDate: Date) => {
-                            setArrivalTime(newDate);
+                        placeholder={translate(
+                            'modals.evacuation.fields.arrivalTime.label'
+                        )}
+                        showSelectMenu={() => {
+                            onSelectTimeMenu('arrival');
                         }}
-                        mode="time"
+                        value={arrivalTime}
                     />
                     <FormInput
                         maxLength={25}
@@ -505,6 +564,22 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 onPress={confirmInsertion}
                 title={translate('modals.evacuation.confirm')}
             />
+
+            <ActionSheetComponent
+                initialOffsetFromBottom={0.6}
+                ref={timeActionSheetRef}
+                statusBarTranslucent
+                bounceOnOpen
+                bounciness={4}
+                gestureEnabled
+                defaultOverlayOpacity={0.3}>
+                <ActionSheetContent
+                    keyboardHeight={keyboardHeight}
+                    actionSheetRef={timeActionSheetRef}
+                    valuesList={hours}
+                    renderElement={renderHourFilterBtn}
+                />
+            </ActionSheetComponent>
 
             <ActionSheetComponent
                 initialOffsetFromBottom={0.6}

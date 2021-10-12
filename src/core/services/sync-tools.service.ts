@@ -43,7 +43,7 @@ export const convertLogsToSyncLogs = (
             essence: log.gasoline,
             num_indice: log.indicator,
             num_abattage: log.logging,
-            longueur: log.logging,
+            longueur: log.lengthVal,
             quality: log.quality,
             volume: log.volume
         };
@@ -101,15 +101,11 @@ export const convertSyncFile = (
     }
 
     if (syncFile.departureTime) {
-        ODOO_EVAC.heure_depart = convertToTimeOnly(
-            new Date(syncFile.departureTime)
-        );
+        ODOO_EVAC.heure_depart = syncFile.departureTime;
     }
 
     if (syncFile.arrivalTime) {
-        ODOO_EVAC.heure_arrivee = convertToTimeOnly(
-            new Date(syncFile.arrivalTime)
-        );
+        ODOO_EVAC.heure_arrivee = syncFile.arrivalTime;
     }
 
     if (syncFile.pointer) {

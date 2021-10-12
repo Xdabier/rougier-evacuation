@@ -2,8 +2,8 @@ export interface LogInterface {
     evacuationId: string;
     creationDate: string;
     barCode: string;
-    logging: number;
-    indicator: number;
+    logging: string;
+    indicator: string;
     id: string;
     gasoline: string;
     dgb: number;
@@ -23,7 +23,7 @@ export interface LogDetailsInterface {
     evacuationId: string;
     creationDate: string;
     barCode: string;
-    logging: number;
+    logging: string;
     lengthVal: number;
     indicator: number;
     id: string;
