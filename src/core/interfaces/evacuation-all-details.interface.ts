@@ -4,6 +4,7 @@ export interface EvacuationAllDetailsInterface {
     departureParcName: string;
     departureParcCode: string;
     arrivalParcName: string;
+    aac: string;
     arrivalParcCode: string;
     driverName: string;
     driverCode: string;

@@ -43,6 +43,8 @@ import {EvacuationAllDetailsInterface} from '../../../core/interfaces/evacuation
 import {requestCloseModal} from '../../../utils/modal.utils';
 import {MainStateContextInterface} from '../../../core/interfaces/main-state.interface';
 import MainStateContext from '../../../core/contexts/main-state.context';
+import CameraModal from '../camera-modal/camera-modal.component';
+import ScanInput from '../scan-input/scan-input.component';
 
 const {
     fullWidth,
@@ -80,24 +82,26 @@ const hours = [...Array(24).keys()].map((a: number) => `${a}`);
 const AddEvacFileDetails: React.FunctionComponent<{
     modalVisible: boolean;
     cubers: CuberInterface[];
-    sites: SiteInterface[];
     oldFile?: EvacuationAllDetailsInterface | null;
     onClose: (refresh?: boolean) => void;
 }> = ({
     modalVisible,
     onClose,
     cubers,
-    oldFile,
-    sites
+    oldFile
 }: {
     modalVisible: boolean;
     onClose: (refresh?: boolean) => void;
     cubers: CuberInterface[];
     oldFile?: EvacuationAllDetailsInterface | null;
-    sites: SiteInterface[];
 }) => {
+    const [cameraModalShow, setCameraModalShow] = useState<
+        '' | 'departure' | 'arrival'
+    >('');
     const [id, setId] = useState<string>('');
     const [idValid, setIdValid] = useState<boolean | boolean[]>(true);
+    const [aac, setAac] = useState<string>('');
+    const [aacValid, setAacValid] = useState<boolean | boolean[]>(true);
     const [receiverValid, setReceiverValid] = useState<boolean | boolean[]>(
         true
     );
@@ -134,6 +138,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
     const validForm = () =>
         !!(
             idValid &&
+            aac &&
+            aacValid &&
             truckNumberValid &&
             driver &&
             truckNumber &&
@@ -163,6 +169,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
 
     const clearFields = () => {
         setId('');
+        setAac('');
         setTransporter('');
         setReceiver('');
         setTruckNumber('');
@@ -180,6 +187,8 @@ const AddEvacFileDetails: React.FunctionComponent<{
         if (oldFile) {
             setId(oldFile.id);
             setIdValid(true);
+            setAac(oldFile.id);
+            setAacValid(true);
             setDriver({
                 name: oldFile.driverName,
                 code: oldFile.driverCode
@@ -219,6 +228,7 @@ const AddEvacFileDetails: React.FunctionComponent<{
         if (validForm() && driver) {
             const EL: EvacuationInterface = {
                 id,
+                aac,
                 creationDate: date.toISOString(),
                 defaultEvacFile: defaultEvacFile ? 1 : 0,
                 departureParc:
@@ -408,6 +418,21 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         disabled={!!oldFile && !!oldFile?.id}
                         required
                     />
+                    <FormInput
+                        maxLength={8}
+                        title={translate('modals.evacuation.fields.aac.label')}
+                        placeholder={translate(
+                            'modals.evacuation.fields.aac.ph'
+                        )}
+                        onChangeText={setAac}
+                        value={aac}
+                        pattern={[
+                            '(99|[0-9]?[0-9])-(99|[0-9]?[0-9])-(99|[0-9]?[0-9])'
+                        ]}
+                        errText={translate('modals.evacuation.fields.aac.err')}
+                        onValidation={setAacValid}
+                        required
+                    />
                     <SelectInput
                         title={translate(
                             'modals.evacuation.fields.driver.label'
@@ -446,29 +471,39 @@ const AddEvacFileDetails: React.FunctionComponent<{
                         }}
                         required
                     />
-                    <SelectInput
+                    <ScanInput
                         title={translate(
                             'modals.evacuation.fields.departureParc.label'
                         )}
                         placeholder={translate(
                             'modals.evacuation.fields.departureParc.ph'
                         )}
-                        showSelectMenu={() => {
-                            onSelectMenu('departureParc');
+                        onChangeText={(code) => {
+                            setDepartureParc({
+                                name: '',
+                                code
+                            });
                         }}
-                        value={departureParc?.name}
+                        value={departureParc?.code}
+                        showCodeScanner={() => setCameraModalShow('departure')}
+                        required
                     />
-                    <SelectInput
+                    <ScanInput
                         title={translate(
                             'modals.evacuation.fields.arrivalParc.label'
                         )}
                         placeholder={translate(
                             'modals.evacuation.fields.arrivalParc.ph'
                         )}
-                        showSelectMenu={() => {
-                            onSelectMenu('arrivalParc');
+                        onChangeText={(code) => {
+                            setArrivalParc({
+                                name: '',
+                                code
+                            });
                         }}
-                        value={arrivalParc?.name}
+                        value={departureParc?.code}
+                        showCodeScanner={() => setCameraModalShow('arrival')}
+                        required
                     />
 
                     <SelectInput
@@ -592,10 +627,28 @@ const AddEvacFileDetails: React.FunctionComponent<{
                 <ActionSheetContent
                     keyboardHeight={keyboardHeight}
                     actionSheetRef={actionSheetRef}
-                    valuesList={selectedList === 'driver' ? cubers : sites}
+                    valuesList={cubers}
                     renderElement={renderFilterBtn}
                 />
             </ActionSheetComponent>
+
+            <CameraModal
+                modalVisible={!!cameraModalShow}
+                onClose={(code?: string) => {
+                    if (code && code.length) {
+                        if (cameraModalShow === 'arrival') {
+                            setArrivalParc({name: '', code});
+                        }
+
+                        if (cameraModalShow === 'departure') {
+                            setDepartureParc({name: '', code});
+                        }
+
+                        setCameraModalShow('');
+                    }
+                }}
+                modalName={translate('common.scanBarCode')}
+            />
         </Modal>
     );
 };

@@ -171,6 +171,11 @@
       "succMsg": "Evacuation form added successfully!",
       "succMsgEdit": "Evacuation form edited successfully!",
       "fields": {
+        "aac": {
+          "label": "AAC",
+          "ph": "ex: 23-26-95",
+          "err": "It should be following this pattern (one or two numbers)-(one or two numbers)-(one or two numbers)"
+        },
         "id": {
           "label": "Form ID",
           "ph": "ex: FICHE-4569",

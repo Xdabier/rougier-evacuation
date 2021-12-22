@@ -9,7 +9,7 @@ import {
     View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useContext, useEffect, useMemo, useState} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import {publish as eventPub} from 'pubsub-js';
 import {HomeScreenProps} from '../../../core/types/home-screen-props.type';
 import CommonStyles, {
@@ -80,14 +80,14 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
     const [addEvacFileModalShow, setAddEvacFileModalShow] = useState<boolean>(
         false
     );
-    const [oldEvac, setOldEvac] = useState<EvacuationAllDetailsInterface | null>(
-        null
-    );
+    const [
+        oldEvac,
+        setOldEvac
+    ] = useState<EvacuationAllDetailsInterface | null>(null);
     const {
         homeEvacuationFile,
         gasolines,
         cubers,
-        sites,
         serverData,
         evacuationFiles
     } = useContext<MainStateContextInterface>(MainStateContext);
@@ -332,7 +332,6 @@ const HomePage: React.FunctionComponent<HomeScreenProps> = ({
             <AddEvacFileDetails
                 oldFile={oldEvac}
                 cubers={cubers}
-                sites={sites}
                 modalVisible={addEvacFileModalShow}
                 onClose={(refresh: boolean | undefined) => {
                     setAddEvacFileModalShow(false);

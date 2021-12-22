@@ -1,5 +1,6 @@
 export interface OdooEvacuationBodyInterface {
     num_fiche: string;
+    aac: string;
     chauffeur: string;
     num_camion: string;
     transporteur?: string;

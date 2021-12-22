@@ -171,6 +171,11 @@
             "succMsg": "Fiche évacuation ajouter avec succée!",
             "succMsgEdit": "Fiche évacuation modifié avec succée!",
             "fields": {
+                "aac": {
+                    "label": "AAC",
+                    "ph": "ex: 23-26-95",
+                    "err": "Merci de respecter ce schéma (un ou deux N°s) - (un ou deux N°s) - (un ou deux N°s)"
+                },
                 "id": {
                     "label": "ID de fiche",
                     "ph": "ex: FICHE-4569",
@@ -193,7 +198,7 @@
                     "ph": "Sélectionnez l'heure de départ"
                 },
                 "arrivalTime": {
-                    "label": "L'heure de d'arrivée",
+                    "label": "L'heure d'arrivée",
                     "ph": "Sélectionnez l'heure d'arrivée"
                 },
                 "date": {

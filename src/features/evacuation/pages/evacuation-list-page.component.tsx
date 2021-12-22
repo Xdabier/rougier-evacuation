@@ -38,20 +38,22 @@ const EvacuationListPage: React.FunctionComponent<EvacuationScreenProps> = ({
     const [addEvacFileModalShow, setAddEvacFileModalShow] = useState<boolean>(
         false
     );
-    const [oldEvac, setOldEvac] = useState<EvacuationAllDetailsInterface | null>(
-        null
-    );
+    const [
+        oldEvac,
+        setOldEvac
+    ] = useState<EvacuationAllDetailsInterface | null>(null);
     const [selectedEvacId, setSelectedEvacId] = useState<string>();
 
     const {
         gasolines,
         evacuationFiles,
         cubers,
-        sites,
         serverData
     } = useContext<MainStateContextInterface>(MainStateContext);
 
-    const onSyncClicked = async (evacuationForm: EvacuationAllDetailsInterface) => {
+    const onSyncClicked = async (
+        evacuationForm: EvacuationAllDetailsInterface
+    ) => {
         try {
             if (serverData && evacuationForm) {
                 eventPub(EventTopicEnum.setSpinner, true);
@@ -188,7 +190,6 @@ const EvacuationListPage: React.FunctionComponent<EvacuationScreenProps> = ({
                 <AddEvacFileDetails
                     oldFile={oldEvac}
                     cubers={cubers}
-                    sites={sites}
                     modalVisible={addEvacFileModalShow}
                     onClose={(refresh: boolean | undefined) => {
                         setAddEvacFileModalShow(false);
@@ -206,7 +207,9 @@ const EvacuationListPage: React.FunctionComponent<EvacuationScreenProps> = ({
                     isFab
                     isElevated
                     onPress={onSyncAllClicked}
-                    disabled={!evacuationFiles.length || !notSyncedFiles.length}>
+                    disabled={
+                        !evacuationFiles.length || !notSyncedFiles.length
+                    }>
                     <View
                         style={[
                             centerVertically,

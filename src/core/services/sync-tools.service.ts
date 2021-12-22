@@ -83,6 +83,7 @@ export const convertSyncFile = (
 ): OdooSyncBodyInterface => {
     const ODOO_EVAC: OdooEvacuationBodyInterface = {
         num_fiche: syncFile.id,
+        aac: syncFile.aac,
         date: convertDate(new Date(syncFile.creationDate)),
         chauffeur: syncFile.driver,
         num_camion: syncFile.truckNumber

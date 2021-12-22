@@ -1,6 +1,7 @@
 export interface EvacuationInterface {
     transporter?: string;
     creationDate: string;
+    aac: string;
     truckNumber: string;
     driver: string;
     departureTime?: string;

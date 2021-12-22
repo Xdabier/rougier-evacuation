@@ -462,14 +462,6 @@ const AddLogDetails: React.FunctionComponent<{
                         required
                     />
                     <FormInput
-                        title={translate('modals.logs.fields.volume.label')}
-                        placeholder={translate('modals.logs.fields.volume.ph')}
-                        onChangeText={setVolume}
-                        value={volume}
-                        disabled
-                        required
-                    />
-                    <FormInput
                         title={translate('modals.logs.fields.quality.label')}
                         placeholder={translate('modals.logs.fields.quality.ph')}
                         onChangeText={setQuality}

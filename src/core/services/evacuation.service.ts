@@ -88,7 +88,7 @@ export const getRawEvacuationFileById = async (
 ): Promise<EvacuationInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.creationDate, evac.driver,
+            `SELECT evac.id, evac.aac, evac.creationDate, evac.driver,
             evac.truckNumber, evac.departureTime, evac.arrivalTime,
             evac.departureParc, evac.arrivalParc, evac.transporter, evac.pointer,
             evac.receiver FROM evacuation AS evac WHERE evac.id = ?;`,
@@ -111,13 +111,12 @@ export const getEvacuationFileById = async (
 ): Promise<EvacuationAllDetailsInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.creationDate, evac.allSynced, evac.transporter,
+            `SELECT evac.id, evac.creationDate, evac.aac, evac.allSynced, evac.transporter,
             evac.truckNumber, evac.driver, evac.departureTime, evac.arrivalTime,
-            evac.pointer, evac.receiver, depParc.name AS departureParcName, depParc.code AS departureParcCode,
-            cu.name AS driverName, cu.code AS driverCode, arrParc.name AS arrivalParcName, arrParc.code AS arrivalParcCode,
+            evac.pointer, evac.receiver, evac.departureParc AS departureParcCode,
+            cu.name AS driverName, cu.code AS driverCode, evac.arrivalParc AS arrivalParcCode,
             evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
             evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS cu ON cu.code = evac.driver
-            JOIN site AS depParc ON depParc.code = evac.departureParc JOIN site AS arrParc ON arrParc.code = evac.arrivalParc
             INNER JOIN evacuationStats AS evacStats ON evacStats.evacuationId = evac.id WHERE evac.id = ?;`,
             [id]
         );
@@ -137,13 +136,12 @@ export const getEvacuationFiles = async (
 ): Promise<EvacuationAllDetailsInterface[]> => {
     try {
         const RES: ResultSet = await SQLiteService.executeQuery(
-            `SELECT evac.id, evac.creationDate, evac.allSynced, evac.transporter,
+            `SELECT evac.id, evac.creationDate, evac.aac, evac.allSynced, evac.transporter,
             evac.truckNumber, evac.driver, evac.departureTime, evac.arrivalTime,
-            evac.pointer, evac.receiver, depParc.name AS departureParcName, depParc.code AS departureParcCode,
-            cu.name AS driverName, cu.code AS driverCode, arrParc.name AS arrivalParcName, arrParc.code AS arrivalParcCode,
+            evac.pointer, evac.receiver, evac.departureParc AS departureParcCode,
+            cu.name AS driverName, cu.code AS driverCode, evac.arrivalParc AS arrivalParcCode,
             evacStats.lastLogDate, evacStats.lastLogId, evacStats.logsNumber,
             evacStats.isDefault FROM evacuation AS evac INNER JOIN cuber AS cu ON cu.code = evac.driver
-            JOIN site AS depParc ON depParc.code = evac.departureParc JOIN site AS arrParc ON arrParc.code = evac.arrivalParc
             INNER JOIN evacuationStats AS evacStats ON evacStats.evacuationId = evac.id;`
         );
         if (close && !SQLiteService.finished) {
